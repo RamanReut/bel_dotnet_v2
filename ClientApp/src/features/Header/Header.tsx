@@ -17,7 +17,7 @@ function Header(): React.ReactElement {
 
     return (
         <header>
-            <AppBar>
+            <AppBar position="static">
                 <Toolbar className={classes.toolbar}>
                     <Grid
                         container

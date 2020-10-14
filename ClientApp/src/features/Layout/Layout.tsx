@@ -1,4 +1,5 @@
 import React, { ReactElement } from 'react';
+import Container from '@material-ui/core/Container';
 import Header from '../Header';
 import Main from './Main';
 import Footer from './Footer';
@@ -11,13 +12,13 @@ function Layout({
     children,
 }: LayoutProps): ReactElement {
     return (
-        <div>
+        <Container maxWidth="lg">
             <Header />
             <Main>
                 {children}
             </Main>
             <Footer />
-        </div>
+        </Container>
     );
 }
 

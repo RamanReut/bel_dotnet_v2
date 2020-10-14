@@ -7,11 +7,15 @@ export interface LayoutProps {
     children?: ReactElement | ReactElement[];
 }
 
-function Layout(): ReactElement {
+function Layout({
+    children,
+}: LayoutProps): ReactElement {
     return (
         <div>
             <Header />
-            <Main />
+            <Main>
+                {children}
+            </Main>
             <Footer />
         </div>
     );

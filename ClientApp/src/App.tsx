@@ -1,6 +1,7 @@
 import React, { Suspense } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import Layout from './features/Layout';
+import Router from './features/Router';
 import './App.css';
 
 function App(): React.ReactElement {
@@ -8,7 +9,9 @@ function App(): React.ReactElement {
         <div className="App">
             <BrowserRouter>
                 <Suspense fallback="loading...">
-                    <Layout />
+                    <Layout>
+                        <Router />
+                    </Layout>
                 </Suspense>
             </BrowserRouter>
         </div>

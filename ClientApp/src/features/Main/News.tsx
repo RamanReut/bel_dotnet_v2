@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import IconButton from '@material-ui/core/IconButton';
-import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
 import Section from '../../share/Section';
 import NewsCarousel from './NewsCarousel';
@@ -14,8 +14,8 @@ const useStyles = makeStyles({
     },
     editButton: {
         position: 'absolute',
-        right: '0.25em',
-        top: '0.25em',
+        right: '0.1em',
+        bottom: '0.1em',
     },
 });
 
@@ -28,9 +28,9 @@ export default function News(): React.ReactElement {
             <IconButton
                 className={classes.editButton}
                 component={Link}
-                to="/editNews"
+                to="/editNews/new"
             >
-                <EditIcon />
+                <AddIcon />
             </IconButton>
         </Section>
     );

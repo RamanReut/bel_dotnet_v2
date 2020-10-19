@@ -74,6 +74,9 @@ export default function EditNews(): React.ReactElement {
                         />
                     </Grid>
                 </Grid>
+                <Typography variant="h6">
+                    {t('content')}
+                </Typography>
                 <ReactMde
                     value={content}
                     onChange={handleChangeContent}

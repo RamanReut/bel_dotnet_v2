@@ -1,7 +1,10 @@
+import { TranslationContainer } from '../../../share/translationContainer';
+
 export interface RootState {
     news: NewsState;
 }
 
 export interface NewsState {
-    content: string;
+    content: TranslationContainer<string>;
+    editLanguage: string;
 }

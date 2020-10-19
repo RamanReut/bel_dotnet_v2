@@ -10,15 +10,20 @@ const editLanguage = createSelector(
     rootSelector,
     (news: types.NewsState) => news.editLanguage,
 );
-
 const content = createSelector(
     rootSelector,
     editLanguage,
     (news: types.NewsState, lang: string) => getTranslation(news.content, lang),
 );
+const title = createSelector(
+    rootSelector,
+    editLanguage,
+    (news: types.NewsState, lang: string) => getTranslation(news.title, lang),
+);
 
 const selectors = {
     content,
+    title,
     editLanguage,
 };
 

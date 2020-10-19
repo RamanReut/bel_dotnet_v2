@@ -6,5 +6,6 @@ export interface RootState {
 
 export interface NewsState {
     content: TranslationContainer<string>;
+    title: TranslationContainer<string>;
     editLanguage: string;
 }

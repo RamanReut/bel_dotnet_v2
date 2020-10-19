@@ -8,6 +8,10 @@ const initialState: NewsState = {
         ru: '',
         be: '',
     },
+    title: {
+        ru: '',
+        be: '',
+    },
     editLanguage: 'ru',
 };
 
@@ -24,6 +28,13 @@ const slice = createSlice({
         },
         changeEditLanguage(state: NewsState, { payload }: PayloadAction<string>) {
             state.editLanguage = payload;
+        },
+        changeTitle(state: NewsState, { payload }: PayloadAction<string>) {
+            state.title = setTranslation<string>(
+                state.title,
+                state.editLanguage,
+                payload,
+            );
         },
     },
 });

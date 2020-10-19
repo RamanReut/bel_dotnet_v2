@@ -19,6 +19,7 @@ const content = createSelector(
 
 const selectors = {
     content,
+    editLanguage,
 };
 
 export default selectors;

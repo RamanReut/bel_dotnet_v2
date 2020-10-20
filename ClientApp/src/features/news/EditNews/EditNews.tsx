@@ -10,6 +10,7 @@ import Section from '../../../share/Section';
 import { selectors, actions } from '../reducer';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import SelectLanguage from '../../../share/SelectLanguage';
+import EditPageActions from '../../../share/EditPageActions';
 
 const useStyles = makeStyles({
     root: {
@@ -82,6 +83,11 @@ export default function EditNews(): React.ReactElement {
                     onChange={handleChangeContent}
                 />
             </Section>
+            <EditPageActions
+                onApply={() => { }}
+                onCancel={() => { }}
+                onPreview={() => { }}
+            />
         </>
     );
 }

@@ -5,7 +5,7 @@ class WrongLocaleError extends Error {
 }
 
 function createRegexp(lang: string) {
-    return new RegExp(`(^${lang}$)|(^${lang}_)`);
+    return new RegExp(`^${lang}$|^${lang}-`);
 }
 
 const RU = createRegexp('ru');

@@ -19,7 +19,7 @@ const slice = createSlice({
     name: 'news',
     initialState,
     reducers: {
-        setContent(state: NewsState, { payload }: PayloadAction<string>) {
+        changeContent(state: NewsState, { payload }: PayloadAction<string>) {
             state.content = setTranslation<string>(
                 state.content,
                 state.editLanguage,

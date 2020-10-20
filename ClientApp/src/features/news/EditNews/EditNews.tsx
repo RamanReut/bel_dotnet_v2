@@ -31,7 +31,7 @@ export default function EditNews(): React.ReactElement {
     const title = useSelector(selectors.title);
 
     const handleChangeContent = useCallback((value: string) => {
-        dispatch(actions.setContent(value));
+        dispatch(actions.changeContent(value));
     }, [dispatch]);
     const handleChangeEditLanguage = useCallback((value: string) => {
         dispatch(actions.changeEditLanguage(value));

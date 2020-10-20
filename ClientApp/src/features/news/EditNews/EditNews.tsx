@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useEffect } from 'react';
 import ReactMde from 'react-mde';
 import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
@@ -6,6 +6,7 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
+import { useHistory, useParams } from 'react-router-dom';
 import Section from '../../../share/Section';
 import { selectors, actions } from '../reducer';
 import 'react-mde/lib/styles/css/react-mde-all.css';
@@ -21,10 +22,16 @@ const useStyles = makeStyles({
     },
 });
 
+interface EditPageParams {
+    id: string;
+}
+
 export default function EditNews(): React.ReactElement {
     const dispatch = useDispatch();
     const classes = useStyles();
     const { t } = useTranslation();
+    const history = useHistory();
+    const params = useParams<EditPageParams>();
 
     const content = useSelector(selectors.content);
     const lang = useSelector(selectors.editLanguage);
@@ -42,6 +49,14 @@ export default function EditNews(): React.ReactElement {
         },
         [dispatch],
     );
+    const handlePreview = useCallback(() => {
+        dispatch(actions.enablePreview());
+        history.push(`/news/${params.id}`);
+    }, [history, params, dispatch]);
+
+    useEffect(() => {
+        dispatch(actions.disablePreview());
+    }, [dispatch]);
 
     return (
         <>
@@ -86,7 +101,7 @@ export default function EditNews(): React.ReactElement {
             <EditPageActions
                 onApply={() => { }}
                 onCancel={() => { }}
-                onPreview={() => { }}
+                onPreview={handlePreview}
             />
         </>
     );

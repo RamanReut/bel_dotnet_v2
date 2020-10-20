@@ -13,6 +13,7 @@ const initialState: NewsState = {
         be: '',
     },
     editLanguage: 'ru',
+    isPreview: false,
 };
 
 const slice = createSlice({
@@ -35,6 +36,12 @@ const slice = createSlice({
                 state.editLanguage,
                 payload,
             );
+        },
+        enablePreview(state: NewsState) {
+            state.isPreview = true;
+        },
+        disablePreview(state: NewsState) {
+            state.isPreview = false;
         },
     },
 });

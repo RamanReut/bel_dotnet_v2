@@ -1,30 +1,35 @@
 import { createSelector } from '@reduxjs/toolkit';
-import * as types from './types';
+import { NewsState, RootState } from './types';
 import { getTranslation } from '../../../share/translationContainer';
 
-function rootSelector(root: types.RootState): types.NewsState {
+function rootSelector(root: RootState): NewsState {
     return root.news;
 }
 
 const editLanguage = createSelector(
     rootSelector,
-    (news: types.NewsState) => news.editLanguage,
+    (news: NewsState) => news.editLanguage,
 );
 const content = createSelector(
     rootSelector,
     editLanguage,
-    (news: types.NewsState, lang: string) => getTranslation(news.content, lang),
+    (news: NewsState, lang: string) => getTranslation(news.content, lang),
 );
 const title = createSelector(
     rootSelector,
     editLanguage,
-    (news: types.NewsState, lang: string) => getTranslation(news.title, lang),
+    (news: NewsState, lang: string) => getTranslation(news.title, lang),
+);
+const isPreview = createSelector(
+    rootSelector,
+    (news: NewsState) => news.isPreview,
 );
 
 const selectors = {
     content,
     title,
     editLanguage,
+    isPreview,
 };
 
 export default selectors;

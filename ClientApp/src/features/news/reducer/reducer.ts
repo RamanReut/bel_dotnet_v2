@@ -12,7 +12,7 @@ const initialState: NewsState = {
         ru: '',
         be: '',
     },
-    editLanguage: 'ru',
+    language: 'ru',
     isPreview: false,
 };
 
@@ -23,17 +23,17 @@ const slice = createSlice({
         changeContent(state: NewsState, { payload }: PayloadAction<string>) {
             state.content = setTranslation<string>(
                 state.content,
-                state.editLanguage,
+                state.language,
                 payload,
             );
         },
-        changeEditLanguage(state: NewsState, { payload }: PayloadAction<string>) {
-            state.editLanguage = payload;
+        changeLanguage(state: NewsState, { payload }: PayloadAction<string>) {
+            state.language = payload;
         },
         changeTitle(state: NewsState, { payload }: PayloadAction<string>) {
             state.title = setTranslation<string>(
                 state.title,
-                state.editLanguage,
+                state.language,
                 payload,
             );
         },

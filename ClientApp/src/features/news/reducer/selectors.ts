@@ -6,18 +6,18 @@ function rootSelector(root: RootState): NewsState {
     return root.news;
 }
 
-const editLanguage = createSelector(
+const language = createSelector(
     rootSelector,
-    (news: NewsState) => news.editLanguage,
+    (news: NewsState) => news.language,
 );
 const content = createSelector(
     rootSelector,
-    editLanguage,
+    language,
     (news: NewsState, lang: string) => getTranslation(news.content, lang),
 );
 const title = createSelector(
     rootSelector,
-    editLanguage,
+    language,
     (news: NewsState, lang: string) => getTranslation(news.title, lang),
 );
 const isPreview = createSelector(
@@ -28,7 +28,7 @@ const isPreview = createSelector(
 const selectors = {
     content,
     title,
-    editLanguage,
+    language,
     isPreview,
 };
 

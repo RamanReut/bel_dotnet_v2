@@ -34,14 +34,14 @@ export default function EditNews(): React.ReactElement {
     const params = useParams<EditPageParams>();
 
     const content = useSelector(selectors.content);
-    const lang = useSelector(selectors.editLanguage);
+    const lang = useSelector(selectors.language);
     const title = useSelector(selectors.title);
 
     const handleChangeContent = useCallback((value: string) => {
         dispatch(actions.changeContent(value));
     }, [dispatch]);
     const handleChangeEditLanguage = useCallback((value: string) => {
-        dispatch(actions.changeEditLanguage(value));
+        dispatch(actions.changeLanguage(value));
     }, [dispatch]);
     const handleChangeTitle = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {

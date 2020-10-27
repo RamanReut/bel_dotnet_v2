@@ -1,4 +1,5 @@
-import { configureStore, combineReducers } from '@reduxjs/toolkit';
+import { configureStore, combineReducers, getDefaultMiddleware } from '@reduxjs/toolkit';
+import thunk from 'redux-thunk';
 import { reducer as news } from '../news/reducer';
 
 const rootReducer = combineReducers({
@@ -7,6 +8,7 @@ const rootReducer = combineReducers({
 
 const store = configureStore({
     reducer: rootReducer,
+    middleware: getDefaultMiddleware().prepend(thunk),
 });
 
 export default store;

@@ -6,9 +6,9 @@ namespace Models
     {
         public class ParseLocaleData
         {
-            public string Ru;
-    
-            public string Be;
+            public string Ru { get; set; }
+
+            public string Be { get; set; }
         }
     }
 }

@@ -1,7 +1,19 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { NewsState } from './types';
+import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
+import { NewsState, RootState } from './types';
 import { setTranslation } from '../../../share/translationContainer';
+import { rootSelector } from './selectors';
+import { newPageRequest } from '../services';
+
+const newPage = createAsyncThunk(
+    'news/createNewPage',
+    async (_, thunkApi) => {
+        const state = rootSelector(thunkApi.getState() as RootState);
+        const resp = await newPageRequest(state);
+
+        return resp.ok;
+    },
+);
 
 const initialState: NewsState = {
     content: {
@@ -46,5 +58,8 @@ const slice = createSlice({
     },
 });
 
-export const { actions } = slice;
+export const actions = {
+    ...slice.actions,
+    newPage,
+};
 export const { reducer } = slice;

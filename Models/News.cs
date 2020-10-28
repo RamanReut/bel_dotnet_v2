@@ -17,6 +17,8 @@ namespace Models
         {
             Entity = new Database.News();
             FillEntityForAdd(parseResult);
+            Db.Add(Entity);
+            Db.SaveChanges();
         }
 
         private void FillEntityForAdd(Parse.News parseResult)

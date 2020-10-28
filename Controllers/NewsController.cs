@@ -6,6 +6,7 @@ using Database;
 namespace Controllers
 {
     [ApiController]
+    [Route("api/[controller]")]
     public class NewsController : ControllerBase
     {
         private DatabaseContext Db;
@@ -22,14 +23,16 @@ namespace Controllers
         [HttpPost]
         public IActionResult Add(Models.Parse.News newsData)
         {
-            var news = new News(Db);
-            news.Add(newsData);
+            //var news = new News(Db);
+            //news.Add(newsData);
             return new OkResult();
         }
 
         [HttpPut]
-        public IActionResult Update()
+        public IActionResult Update(
+            Models.Parse.News news)
         {
+            new Models.News(Db).Add(news);
             return new OkResult();
         }
 

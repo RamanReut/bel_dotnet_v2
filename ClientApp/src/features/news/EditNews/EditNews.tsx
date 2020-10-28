@@ -40,19 +40,26 @@ export default function EditNews(): React.ReactElement {
     const handleChangeContent = useCallback((value: string) => {
         dispatch(actions.changeContent(value));
     }, [dispatch]);
+
     const handleChangeEditLanguage = useCallback((value: string) => {
         dispatch(actions.changeLanguage(value));
     }, [dispatch]);
+
     const handleChangeTitle = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
             dispatch(actions.changeTitle(event.target.value));
         },
         [dispatch],
     );
+
     const handlePreview = useCallback(() => {
         dispatch(actions.enablePreview());
         history.push(`/news/${params.id}`);
     }, [history, params, dispatch]);
+
+    const handleApply = useCallback(() => {
+        dispatch(actions.newPage());
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(actions.disablePreview());
@@ -99,7 +106,7 @@ export default function EditNews(): React.ReactElement {
                 />
             </Section>
             <EditPageActions
-                onApply={() => { }}
+                onApply={handleApply}
                 onCancel={() => { }}
                 onPreview={handlePreview}
             />

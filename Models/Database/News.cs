@@ -14,6 +14,11 @@ namespace Models
 
             public String PreviewImage { get; set; }
 
+            public News()
+            {
+                Content = new LocaleData();
+                Title = new LocaleData();
+            }
         }
     }
 }

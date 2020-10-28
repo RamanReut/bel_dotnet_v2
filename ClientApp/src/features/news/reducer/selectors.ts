@@ -2,7 +2,7 @@ import { createSelector } from '@reduxjs/toolkit';
 import { NewsState, RootState } from './types';
 import { getTranslation } from '../../../share/translationContainer';
 
-function rootSelector(root: RootState): NewsState {
+export function rootSelector(root: RootState): NewsState {
     return root.news;
 }
 

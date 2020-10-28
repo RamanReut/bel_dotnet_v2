@@ -1,6 +1,5 @@
 import ky from 'ky';
-
-const RETRY_COUNT = 5;
+import { REQUEST_RETRY_COUNT } from '../../../share/constants';
 
 export interface PageData {
     content: {
@@ -18,7 +17,7 @@ async function newPageRequest(data: PageData): Promise<Response> {
         '/api/news',
         {
             json: { content: data.content, title: data.title },
-            retry: RETRY_COUNT,
+            retry: REQUEST_RETRY_COUNT,
         },
     );
 }

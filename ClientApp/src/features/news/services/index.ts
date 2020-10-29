@@ -1,4 +1,5 @@
 import newPageRequest from './newPageRequest';
+import getPage, { Page } from './getPage';
 
-// eslint-disable-next-line import/prefer-default-export
-export { newPageRequest };
+export { newPageRequest, getPage };
+export type { Page };

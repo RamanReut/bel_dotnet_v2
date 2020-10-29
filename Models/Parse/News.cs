@@ -13,6 +13,17 @@ namespace Models
             public ParseLocaleData Title { get; set; }
 
             public string PreviewImage { get; set; }
+
+            public static implicit operator Parse.News(Database.News news)
+            {
+                return new Parse.News
+                {
+                    Id = news.Id,
+                    Content = news.Content,
+                    Title = news.Title,
+                    PreviewImage = news.PreviewImage,
+                };
+            }
         }
 
     }

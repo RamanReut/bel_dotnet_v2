@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
+import { useParams } from 'react-router-dom';
 import { selectors, actions } from '../reducer';
 import Section from '../../../share/Section';
 
@@ -16,10 +17,15 @@ const useStyles = makeStyles({
     },
 });
 
+interface NewsParams {
+    id: string;
+}
+
 export default function News(): React.ReactElement {
     const classes = useStyles();
     const dispatch = useDispatch();
     const { i18n } = useTranslation();
+    const { id } = useParams<NewsParams>();
 
     const isPreview = useSelector(selectors.isPreview);
     const title = useSelector(selectors.title);
@@ -30,6 +36,12 @@ export default function News(): React.ReactElement {
             dispatch(actions.changeLanguage(i18n.language));
         }
     }, [dispatch, isPreview, i18n.language]);
+
+    useEffect(() => {
+        if (!isPreview) {
+            dispatch(actions.getPageData(parseInt(id, 10)));
+        }
+    }, [dispatch, id, isPreview]);
 
     return (
         <Section className={classes.root}>

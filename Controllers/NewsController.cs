@@ -36,10 +36,11 @@ namespace Controllers
             return new OkResult();
         }
 
-        [HttpGet]
-        public IActionResult Index()
+        [HttpGet("{id}")]
+        public ActionResult<Models.Parse.News> Get(int id)
         {
-            return new OkResult();
+            Logger.LogInformation("Get news {0}", id);
+            return new Models.News(Db).Get(id);
         }
     }
 }

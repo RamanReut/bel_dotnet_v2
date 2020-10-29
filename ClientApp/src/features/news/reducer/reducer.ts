@@ -3,7 +3,7 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { NewsState, RootState } from './types';
 import { setTranslation } from '../../../share/translationContainer';
 import { rootSelector } from './selectors';
-import { newPageRequest } from '../services';
+import { newPageRequest, getPage, Page } from '../services';
 
 const newPage = createAsyncThunk(
     'news/createNewPage',
@@ -12,6 +12,14 @@ const newPage = createAsyncThunk(
         const resp = await newPageRequest(state);
 
         return resp.ok;
+    },
+);
+
+const getPageData = createAsyncThunk(
+    'news/getPageData',
+    async (id: number) => {
+        const pageInfo = await getPage(id);
+        return pageInfo;
     },
 );
 
@@ -56,10 +64,20 @@ const slice = createSlice({
             state.isPreview = false;
         },
     },
+    extraReducers: (builder) => {
+        builder.addCase(
+            getPageData.fulfilled,
+            (state: NewsState, { payload }: PayloadAction<Page>) => {
+                state.content = payload.content;
+                state.title = payload.title;
+            },
+        );
+    },
 });
 
 export const actions = {
     ...slice.actions,
     newPage,
+    getPageData,
 };
 export const { reducer } = slice;

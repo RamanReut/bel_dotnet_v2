@@ -7,6 +7,7 @@ import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
 import { selectors, actions } from '../reducer';
 import Section from '../../../share/Section';
+import LoadControl from '../../../share/LoadControl';
 
 const useStyles = makeStyles({
     root: {
@@ -30,6 +31,8 @@ export default function News(): React.ReactElement {
     const isPreview = useSelector(selectors.isPreview);
     const title = useSelector(selectors.title);
     const content = useSelector(selectors.content);
+    const isLoading = useSelector(selectors.isContentLoading);
+    const isLoadSuccess = useSelector(selectors.isContentLoadSuccess);
 
     useEffect(() => {
         if (!isPreview) {
@@ -44,13 +47,18 @@ export default function News(): React.ReactElement {
     }, [dispatch, id, isPreview]);
 
     return (
-        <Section className={classes.root}>
-            <Typography variant="h5">
-                {title}
-            </Typography>
-            <ReactMarkdown className={classes.markdown}>
-                {content}
-            </ReactMarkdown>
-        </Section>
+        <LoadControl
+            isLoading={isLoading}
+            isLoadSuccess={isLoadSuccess}
+        >
+            <Section className={classes.root}>
+                <Typography variant="h5">
+                    {title}
+                </Typography>
+                <ReactMarkdown className={classes.markdown}>
+                    {content}
+                </ReactMarkdown>
+            </Section>
+        </LoadControl>
     );
 }

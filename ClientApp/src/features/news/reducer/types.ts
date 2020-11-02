@@ -9,4 +9,6 @@ export interface NewsState {
     title: TranslationContainer<string>;
     language: string;
     isPreview: boolean;
+    isContentLoadSuccess: boolean;
+    isContentLoading: boolean;
 }

@@ -34,6 +34,8 @@ const initialState: NewsState = {
     },
     language: 'ru',
     isPreview: false,
+    isContentLoadSuccess: true,
+    isContentLoading: false,
 };
 
 const slice = createSlice({
@@ -66,10 +68,25 @@ const slice = createSlice({
     },
     extraReducers: (builder) => {
         builder.addCase(
+            getPageData.pending,
+            (state: NewsState) => {
+                state.isContentLoading = true;
+            },
+        );
+        builder.addCase(
             getPageData.fulfilled,
             (state: NewsState, { payload }: PayloadAction<Page>) => {
                 state.content = payload.content;
                 state.title = payload.title;
+                state.isContentLoadSuccess = true;
+                state.isContentLoading = false;
+            },
+        );
+        builder.addCase(
+            getPageData.rejected,
+            (state: NewsState) => {
+                state.isContentLoading = false;
+                state.isContentLoadSuccess = false;
             },
         );
     },

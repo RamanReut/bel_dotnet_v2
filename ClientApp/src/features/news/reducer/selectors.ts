@@ -24,12 +24,22 @@ const isPreview = createSelector(
     rootSelector,
     (news: NewsState) => news.isPreview,
 );
+const isContentLoading = createSelector(
+    rootSelector,
+    (news: NewsState) => news.isContentLoading,
+);
+const isContentLoadSuccess = createSelector(
+    rootSelector,
+    (news: NewsState) => news.isContentLoadSuccess,
+);
 
 const selectors = {
     content,
     title,
     language,
     isPreview,
+    isContentLoading,
+    isContentLoadSuccess,
 };
 
 export default selectors;

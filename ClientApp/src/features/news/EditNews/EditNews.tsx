@@ -2,16 +2,17 @@ import React, { useCallback, useEffect } from 'react';
 import ReactMde from 'react-mde';
 import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
 import Section from '../../../share/Section';
 import { selectors, actions } from '../reducer';
-import 'react-mde/lib/styles/css/react-mde-all.css';
 import SelectLanguage from '../../../share/SelectLanguage';
 import EditPageActions from '../../../share/EditPageActions';
+import CloudinaryUpload from '../../../share/CloudinaryUpload';
+import 'react-mde/lib/styles/css/react-mde-all.css';
+import LabeledContainer from './LabeledContainer';
 
 const useStyles = makeStyles({
     root: {
@@ -72,31 +73,16 @@ export default function EditNews(): React.ReactElement {
                     lang={lang}
                     onChange={handleChangeEditLanguage}
                 />
-                <Grid container>
-                    <Grid
-                        item
-                        sm={2}
-                        xs={12}
-                    >
-                        <Typography
-                            variant="h6"
-                            align="left"
-                        >
-                            {t('title')}
-                        </Typography>
-                    </Grid>
-                    <Grid
-                        item
-                        sm={10}
-                        xs={12}
-                    >
-                        <TextField
-                            value={title}
-                            onChange={handleChangeTitle}
-                            fullWidth
-                        />
-                    </Grid>
-                </Grid>
+                <LabeledContainer title={t('title')}>
+                    <TextField
+                        value={title}
+                        onChange={handleChangeTitle}
+                        fullWidth
+                    />
+                </LabeledContainer>
+                <LabeledContainer title={t('preview')}>
+                    <CloudinaryUpload />
+                </LabeledContainer>
                 <Typography variant="h6">
                     {t('content')}
                 </Typography>

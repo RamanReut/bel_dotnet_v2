@@ -8,6 +8,7 @@ import PreviewIcon from '@material-ui/icons/Subject';
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
         position: 'fixed',
+        zIndex: 100,
         right: '1em',
         bottom: '1em',
         '&>*': {

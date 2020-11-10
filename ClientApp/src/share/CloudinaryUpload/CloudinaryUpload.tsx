@@ -1,19 +1,24 @@
 import React, {
     ReactElement,
-    useState,
     useCallback,
+    useState,
 } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import ImageUploading, { ImageListType } from 'react-images-uploading';
+import ImageUploading from 'react-images-uploading';
 import { useTranslation } from 'react-i18next';
+import { Image } from 'cloudinary-react';
 import DragAccept from './DragAccept';
-
-const HEIGHT = '6em';
-const REPONSIVE_HEIGHT_CHANGE = '6em';
+import LoadPlug from './LoadPlug';
+import imageUpload from './imageUpload';
+import {
+    IMAGE_HEIGHT,
+    DEFAULT_HEIGHT,
+    SMALL_DEVICE_HEIGHT,
+} from './constants';
 
 const useButtonStyle = makeStyles({
     root: {
@@ -51,23 +56,15 @@ function ButtonWithIcon({
 interface ControlButtonGroupProps {
     onUpload: () => void;
     onRemove: () => void;
-    onUpdate: (index: number) => void;
     isImageLoaded: boolean;
 }
 
 function ControlButtonGroup({
     onUpload,
     onRemove,
-    onUpdate,
     isImageLoaded,
 }: ControlButtonGroupProps) {
     const { t } = useTranslation();
-    const handleUpdate = useCallback(
-        () => {
-            onUpdate(0);
-        },
-        [onUpdate],
-    );
 
     return (
         <Grid
@@ -78,7 +75,7 @@ function ControlButtonGroup({
             <Grid item>
                 <ButtonWithIcon
                     icon={<UploadIcon />}
-                    onClick={isImageLoaded ? () => handleUpdate : onUpload}
+                    onClick={onUpload}
                 >
                     {isImageLoaded ? t('update') : t('upload')}
                 </ButtonWithIcon>
@@ -101,9 +98,9 @@ function ControlButtonGroup({
 const useCloudinaryUploadStyles = makeStyles((theme: Theme) => ({
     root: {
         width: '100%',
-        height: HEIGHT,
+        height: DEFAULT_HEIGHT,
         [theme.breakpoints.only('xs')]: {
-            height: `calc(${HEIGHT} + ${REPONSIVE_HEIGHT_CHANGE})`,
+            height: SMALL_DEVICE_HEIGHT,
         },
         position: 'relative',
     },
@@ -127,29 +124,31 @@ const useCloudinaryUploadStyles = makeStyles((theme: Theme) => ({
         },
     },
     image: {
-        height: HEIGHT,
+        height: IMAGE_HEIGHT,
     },
 }));
 
 function CloudinaryUpload(): ReactElement {
-    const [images, setImages] = useState<ImageListType>([]);
     const { t } = useTranslation();
     const classes = useCloudinaryUploadStyles();
+    const [image, setImage] = useState<string>();
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
-    const handleChange = useCallback((imageList) => {
-        setImages(imageList);
-    }, [setImages]);
+    const handleChange = useCallback(async (imageList) => {
+        setIsLoading(true);
+        const path = await imageUpload(imageList[0].file);
+        setImage(path);
+        setIsLoading(false);
+    }, []);
 
     return (
         <ImageUploading
-            value={images}
+            value={[]}
             onChange={handleChange}
         >
             {({
-                imageList,
                 onImageUpload,
                 onImageRemoveAll,
-                onImageUpdate,
                 dragProps,
                 isDragging,
             }) => (
@@ -165,14 +164,12 @@ function CloudinaryUpload(): ReactElement {
                         onDragOver={dragProps.onDragOver}
                     >
                         {((): ReactElement => {
-                            const image = imageList[0];
-
                             if (image) {
                                 return (
                                     <Grid item>
-                                        <img
+                                        <Image
                                             className={classes.image}
-                                            src={image.dataURL}
+                                            publicId={image}
                                             alt={t('previewImageAlt')}
                                         />
                                     </Grid>
@@ -184,8 +181,7 @@ function CloudinaryUpload(): ReactElement {
                             <ControlButtonGroup
                                 onUpload={onImageUpload}
                                 onRemove={onImageRemoveAll}
-                                onUpdate={onImageUpdate}
-                                isImageLoaded={!!images.length}
+                                isImageLoaded={!!image}
                             />
                         </Grid>
                     </Grid>
@@ -193,6 +189,7 @@ function CloudinaryUpload(): ReactElement {
                         isDragging={isDragging as boolean}
                         {...dragProps}
                     />
+                    <LoadPlug isActive={isLoading} />
                 </div>
             )}
         </ImageUploading>

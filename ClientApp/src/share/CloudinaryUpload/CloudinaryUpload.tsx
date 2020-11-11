@@ -7,10 +7,13 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import UploadIcon from '@material-ui/icons/CloudUpload';
 import DeleteIcon from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 import { makeStyles, Theme } from '@material-ui/core/styles';
+import CloseIcon from '@material-ui/icons/Close';
 import ImageUploading from 'react-images-uploading';
 import { useTranslation } from 'react-i18next';
 import { Image } from 'cloudinary-react';
+import { useSnackbar } from 'notistack';
 import DragAccept from './DragAccept';
 import LoadPlug from './LoadPlug';
 import imageUpload from './imageUpload';
@@ -126,20 +129,39 @@ const useCloudinaryUploadStyles = makeStyles((theme: Theme) => ({
     image: {
         height: IMAGE_HEIGHT,
     },
+    closeIcon: {
+        color: theme.palette.error.contrastText,
+    },
 }));
 
 function CloudinaryUpload(): ReactElement {
     const { t } = useTranslation();
     const classes = useCloudinaryUploadStyles();
+    const { enqueueSnackbar, closeSnackbar } = useSnackbar();
     const [image, setImage] = useState<string>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
+    const handleLoadingError = useCallback(() => {
+        enqueueSnackbar(t('imageUploadError'), {
+            variant: 'error',
+            action: (
+                <IconButton
+                    className={classes.closeIcon}
+                    onClick={() => closeSnackbar()}
+                >
+                    <CloseIcon />
+                </IconButton>
+            ),
+        });
+    }, [enqueueSnackbar, t, classes.closeIcon, closeSnackbar]);
+
     const handleChange = useCallback(async (imageList) => {
         setIsLoading(true);
-        const path = await imageUpload(imageList[0].file);
-        setImage(path);
-        setIsLoading(false);
-    }, []);
+        imageUpload(imageList[0].file)
+            .then((path) => setImage(path))
+            .catch(handleLoadingError)
+            .finally(() => setIsLoading(false));
+    }, [handleLoadingError]);
 
     return (
         <ImageUploading

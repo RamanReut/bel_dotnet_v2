@@ -1,16 +1,6 @@
 import ky from 'ky';
 import { REQUEST_RETRY_COUNT } from '../../../share/constants';
-
-export interface Page {
-    content: {
-        ru: string;
-        be: string;
-    };
-    title: {
-        ru: string;
-        be: string;
-    };
-}
+import { Page } from './types';
 
 async function getPage(id: number): Promise<Page> {
     return ky.get(

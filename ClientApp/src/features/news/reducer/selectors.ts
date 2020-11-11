@@ -20,6 +20,10 @@ const title = createSelector(
     language,
     (news: NewsState, lang: string) => getTranslation(news.title, lang),
 );
+const previewImage = createSelector(
+    rootSelector,
+    (news: NewsState) => news.previewImage,
+);
 const isPreview = createSelector(
     rootSelector,
     (news: NewsState) => news.isPreview,
@@ -37,6 +41,7 @@ const selectors = {
     content,
     title,
     language,
+    previewImage,
     isPreview,
     isContentLoading,
     isContentLoadSuccess,

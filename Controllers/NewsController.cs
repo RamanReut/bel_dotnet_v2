@@ -21,18 +21,18 @@ namespace Controllers
         }
 
         [HttpPost]
-        public IActionResult Add(Models.Parse.News newsData)
+        public IActionResult Add(Models.Parse.News news)
         {
-            //var news = new News(Db);
-            //news.Add(newsData);
+            Logger.LogInformation("Create new news");
+            new Models.News(Db).Add(news);
             return new OkResult();
         }
 
         [HttpPut]
-        public IActionResult Update(
-            Models.Parse.News news)
+        public IActionResult Update(Models.Parse.News news)
         {
-            new Models.News(Db).Add(news);
+            Logger.LogInformation("Update news {0}", news.Id);
+            new Models.News(Db).Update(news);
             return new OkResult();
         }
 

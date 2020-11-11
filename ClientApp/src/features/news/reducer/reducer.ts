@@ -3,13 +3,31 @@ import { createSlice, PayloadAction, createAsyncThunk } from '@reduxjs/toolkit';
 import { NewsState, RootState } from './types';
 import { setTranslation } from '../../../share/translationContainer';
 import { rootSelector } from './selectors';
-import { newPageRequest, getPage, Page } from '../services';
+import {
+    newPageRequest,
+    getPage,
+    Page,
+    updatePageRequest,
+} from '../services';
 
 const newPage = createAsyncThunk(
     'news/createNewPage',
     async (_, thunkApi) => {
         const state = rootSelector(thunkApi.getState() as RootState);
         const resp = await newPageRequest(state);
+
+        return resp.ok;
+    },
+);
+
+const updatePage = createAsyncThunk(
+    'news/updatePage',
+    async (pageId: number, thunkApi) => {
+        const state = rootSelector(thunkApi.getState() as RootState);
+        const resp = await updatePageRequest({
+            ...state,
+            id: pageId,
+        });
 
         return resp.ok;
     },
@@ -33,6 +51,7 @@ const initialState: NewsState = {
         be: '',
     },
     language: 'ru',
+    previewImage: '',
     isPreview: false,
     isContentLoadSuccess: true,
     isContentLoading: false,
@@ -59,6 +78,9 @@ const slice = createSlice({
                 payload,
             );
         },
+        changePreviewImage(state: NewsState, { payload }: PayloadAction<string>) {
+            state.previewImage = payload;
+        },
         enablePreview(state: NewsState) {
             state.isPreview = true;
         },
@@ -78,6 +100,7 @@ const slice = createSlice({
             (state: NewsState, { payload }: PayloadAction<Page>) => {
                 state.content = payload.content;
                 state.title = payload.title;
+                state.previewImage = payload.previewImage;
                 state.isContentLoadSuccess = true;
                 state.isContentLoading = false;
             },
@@ -95,6 +118,7 @@ const slice = createSlice({
 export const actions = {
     ...slice.actions,
     newPage,
+    updatePage,
     getPageData,
 };
 export const { reducer } = slice;

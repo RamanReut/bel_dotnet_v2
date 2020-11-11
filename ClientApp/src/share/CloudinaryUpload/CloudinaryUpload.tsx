@@ -134,11 +134,18 @@ const useCloudinaryUploadStyles = makeStyles((theme: Theme) => ({
     },
 }));
 
-function CloudinaryUpload(): ReactElement {
+export interface CloudinaryUploadProps {
+    image: string;
+    onChange: (imageId: string) => void;
+}
+
+function CloudinaryUpload({
+    image,
+    onChange,
+}: CloudinaryUploadProps): ReactElement {
     const { t } = useTranslation();
     const classes = useCloudinaryUploadStyles();
     const { enqueueSnackbar, closeSnackbar } = useSnackbar();
-    const [image, setImage] = useState<string>();
     const [isLoading, setIsLoading] = useState<boolean>(false);
 
     const handleLoadingError = useCallback(() => {
@@ -158,10 +165,10 @@ function CloudinaryUpload(): ReactElement {
     const handleChange = useCallback(async (imageList) => {
         setIsLoading(true);
         imageUpload(imageList[0].file)
-            .then((path) => setImage(path))
+            .then((path) => onChange(path))
             .catch(handleLoadingError)
             .finally(() => setIsLoading(false));
-    }, [handleLoadingError]);
+    }, [handleLoadingError, onChange]);
 
     return (
         <ImageUploading

@@ -1,5 +1,7 @@
 import newPageRequest from './newPageRequest';
-import getPage, { Page } from './getPage';
+import getPage from './getPage';
+import { Page } from './types';
+import updatePageRequest, { UpdatePage } from './updatePageRequest';
 
-export { newPageRequest, getPage };
-export type { Page };
+export { newPageRequest, getPage, updatePageRequest };
+export type { Page, UpdatePage };

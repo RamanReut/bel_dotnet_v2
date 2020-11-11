@@ -37,6 +37,7 @@ export default function EditNews(): React.ReactElement {
     const content = useSelector(selectors.content);
     const lang = useSelector(selectors.language);
     const title = useSelector(selectors.title);
+    const previewImage = useSelector(selectors.previewImage);
 
     const handleChangeContent = useCallback((value: string) => {
         dispatch(actions.changeContent(value));
@@ -53,18 +54,32 @@ export default function EditNews(): React.ReactElement {
         [dispatch],
     );
 
+    const handleChangePreviewImage = useCallback((imageId: string) => {
+        dispatch(actions.changePreviewImage(imageId));
+    }, [dispatch]);
+
     const handlePreview = useCallback(() => {
         dispatch(actions.enablePreview());
         history.push(`/news/${params.id}`);
     }, [history, params, dispatch]);
 
     const handleApply = useCallback(() => {
-        dispatch(actions.newPage());
-    }, [dispatch]);
+        if (params.id === 'new') {
+            dispatch(actions.newPage());
+        } else {
+            dispatch(actions.updatePage(parseInt(params.id, 10)));
+        }
+    }, [dispatch, params.id]);
 
     useEffect(() => {
         dispatch(actions.disablePreview());
     }, [dispatch]);
+
+    useEffect(() => {
+        if (params.id !== 'new') {
+            dispatch(actions.getPageData(parseInt(params.id, 10)));
+        }
+    }, [dispatch, params.id]);
 
     return (
         <>
@@ -81,7 +96,10 @@ export default function EditNews(): React.ReactElement {
                     />
                 </LabeledContainer>
                 <LabeledContainer title={t('preview')}>
-                    <CloudinaryUpload />
+                    <CloudinaryUpload
+                        image={previewImage}
+                        onChange={handleChangePreviewImage}
+                    />
                 </LabeledContainer>
                 <Typography variant="h6">
                     {t('content')}

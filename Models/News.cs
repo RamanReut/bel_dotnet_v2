@@ -15,6 +15,15 @@ namespace Models
             Db = db;
         }
 
+        public void Update(Parse.News parseResult)
+        {
+            GetEntityFromDatabase(parseResult.Id);
+            Entity.PreviewImage = parseResult.PreviewImage;
+            Entity.Content.SetFromParse(parseResult.Content);
+            Entity.Title.SetFromParse(parseResult.Title);
+            Db.SaveChanges();
+        }
+
         public void Add(Parse.News parseResult)
         {
             Entity = new Database.News();

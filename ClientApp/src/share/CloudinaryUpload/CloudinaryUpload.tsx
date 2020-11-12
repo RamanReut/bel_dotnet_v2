@@ -164,10 +164,15 @@ function CloudinaryUpload({
 
     const handleChange = useCallback(async (imageList) => {
         setIsLoading(true);
-        imageUpload(imageList[0].file)
-            .then((path) => onChange(path))
-            .catch(handleLoadingError)
-            .finally(() => setIsLoading(false));
+        if (imageList.length > 0) {
+            imageUpload(imageList[0].file)
+                .then((path) => onChange(path))
+                .catch(handleLoadingError)
+                .finally(() => setIsLoading(false));
+        } else {
+            onChange('');
+            setIsLoading(false);
+        }
     }, [handleLoadingError, onChange]);
 
     return (

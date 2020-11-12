@@ -10,26 +10,38 @@ import {
     updatePageRequest,
 } from '../services';
 
+interface SaveChangesOptions {
+    onFulfilled?: (resp: Response) => void;
+    onRejected?: (err: Error) => void;
+    onFinally?: () => void;
+}
+
 const newPage = createAsyncThunk(
     'news/createNewPage',
-    async (_, thunkApi) => {
+    async (options: SaveChangesOptions | undefined, thunkApi) => {
         const state = rootSelector(thunkApi.getState() as RootState);
-        const resp = await newPageRequest(state);
-
-        return resp.ok;
+        newPageRequest(state)
+            .then(options?.onFulfilled)
+            .catch(options?.onRejected)
+            .finally(options?.onFinally);
     },
 );
 
+interface UpdatePageOptions extends SaveChangesOptions {
+    pageId: number;
+}
+
 const updatePage = createAsyncThunk(
     'news/updatePage',
-    async (pageId: number, thunkApi) => {
+    async (options: UpdatePageOptions, thunkApi) => {
         const state = rootSelector(thunkApi.getState() as RootState);
-        const resp = await updatePageRequest({
+        updatePageRequest({
             ...state,
-            id: pageId,
-        });
-
-        return resp.ok;
+            id: options.pageId,
+        })
+            .then(options.onFulfilled)
+            .catch(options.onRejected)
+            .finally(options.onFinally);
     },
 );
 

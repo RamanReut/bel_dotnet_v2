@@ -67,7 +67,9 @@ export default function EditNews(): React.ReactElement {
         if (params.id === 'new') {
             dispatch(actions.newPage());
         } else {
-            dispatch(actions.updatePage(parseInt(params.id, 10)));
+            dispatch(actions.updatePage({
+                pageId: parseInt(params.id, 10),
+            }));
         }
     }, [dispatch, params.id]);
 

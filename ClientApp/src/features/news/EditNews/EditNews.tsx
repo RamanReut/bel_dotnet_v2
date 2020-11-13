@@ -1,5 +1,4 @@
 import React, { useCallback, useEffect } from 'react';
-import ReactMde from 'react-mde';
 import { useSelector, useDispatch } from 'react-redux';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
@@ -12,6 +11,7 @@ import { selectors, actions } from '../reducer';
 import SelectLanguage from '../../../share/SelectLanguage';
 import EditPageActions from '../../../share/EditPageActions';
 import CloudinaryUpload from '../../../share/CloudinaryUpload';
+import MarkdownEditor from '../../../share/MarkdownEditor';
 import 'react-mde/lib/styles/css/react-mde-all.css';
 import LabeledContainer from './LabeledContainer';
 
@@ -143,7 +143,7 @@ export default function EditNews(): React.ReactElement {
                 <Typography variant="h6">
                     {t('content')}
                 </Typography>
-                <ReactMde
+                <MarkdownEditor
                     value={content}
                     onChange={handleChangeContent}
                 />

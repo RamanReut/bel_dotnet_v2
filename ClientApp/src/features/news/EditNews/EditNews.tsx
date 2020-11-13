@@ -6,6 +6,7 @@ import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
 import { useHistory, useParams } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 import Section from '../../../share/Section';
 import { selectors, actions } from '../reducer';
 import SelectLanguage from '../../../share/SelectLanguage';
@@ -23,6 +24,10 @@ const useStyles = makeStyles({
     },
 });
 
+interface NewPageResponseData {
+    id: number;
+}
+
 interface EditPageParams {
     id: string;
 }
@@ -33,6 +38,7 @@ export default function EditNews(): React.ReactElement {
     const { t } = useTranslation();
     const history = useHistory();
     const params = useParams<EditPageParams>();
+    const { enqueueSnackbar } = useSnackbar();
 
     const content = useSelector(selectors.content);
     const lang = useSelector(selectors.language);
@@ -63,15 +69,46 @@ export default function EditNews(): React.ReactElement {
         history.push(`/news/${params.id}`);
     }, [history, params, dispatch]);
 
-    const handleApply = useCallback(() => {
-        if (params.id === 'new') {
-            dispatch(actions.newPage());
-        } else {
-            dispatch(actions.updatePage({
-                pageId: parseInt(params.id, 10),
-            }));
-        }
-    }, [dispatch, params.id]);
+    const handleSuccessUpdatePage = useCallback(() => {
+        history.push(`/news/${params.id}`);
+    }, [history, params.id]);
+
+    const handleSuccessNewPage = useCallback((resp: Response) => {
+        resp.json()
+            .then((data: NewPageResponseData) => {
+                history.push(`/news/${data.id}`)
+            });
+    }, [history,]);
+
+    const handleErrorSaveChanges = useCallback(() => {
+        enqueueSnackbar(t('savePageError'), {
+            variant: 'error',
+        });
+    }, [enqueueSnackbar, t]);
+
+    const handleApply = useCallback(
+        () => {
+            if (params.id === 'new') {
+                dispatch(actions.newPage({
+                    onFulfilled: handleSuccessNewPage,
+                    onRejected: handleErrorSaveChanges,
+                }));
+            } else {
+                dispatch(actions.updatePage({
+                    pageId: parseInt(params.id, 10),
+                    onFulfilled: handleSuccessUpdatePage,
+                    onRejected: handleErrorSaveChanges,
+                }));
+            }
+        },
+        [
+            dispatch,
+            handleErrorSaveChanges,
+            handleSuccessNewPage,
+            handleSuccessUpdatePage,
+            params.id,
+        ],
+    );
 
     useEffect(() => {
         dispatch(actions.disablePreview());

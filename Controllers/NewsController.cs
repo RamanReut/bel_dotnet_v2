@@ -41,9 +41,21 @@ namespace Controllers
         [HttpGet("{id}")]
         public ActionResult<Models.Parse.News> Get(int id)
         {
+            Models.Parse.News news;
+
             Logger.LogInformation("Get news {0}", id);
-            Logger.LogInformation("Path {0}", Request.Headers[":authority"].ToString());
-            return new Models.News(Db).Get(id);
+
+            try 
+            {    
+                news = (new Models.News(Db)).Get(id);
+            }
+            catch (NotFoundException ex)
+            {
+                Logger.LogError("News page with id {0}", ex.Id);
+                return new NotFoundObjectResult(new { id = ex.Id });
+            }
+
+            return news;
         }
     }
 }

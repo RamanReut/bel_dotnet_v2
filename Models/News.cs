@@ -42,7 +42,15 @@ namespace Models
 
         public Parse.News Get(int id)
         {
-            GetEntityFromDatabase(id);
+            try
+            {
+                GetEntityFromDatabase(id);
+            }
+            catch (InvalidOperationException)
+            {
+                throw new NotFoundException(id);
+            }
+
             return Entity;
         }
 

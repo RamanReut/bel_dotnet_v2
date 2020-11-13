@@ -14,7 +14,8 @@ namespace Controllers
 
         public NewsController(
             DatabaseContext db,
-            ILogger<NewsController> logger)
+            ILogger<NewsController> logger
+        )
         {
             Db = db;
             Logger = logger;
@@ -24,8 +25,9 @@ namespace Controllers
         public IActionResult Add(Models.Parse.News news)
         {
             Logger.LogInformation("Create new news");
-            new Models.News(Db).Add(news);
-            return new OkResult();
+            var id = new Models.News(Db).Add(news);
+            return new CreatedAtActionResult(
+                nameof(Get), "news", new { id = id }, new { id = id });
         }
 
         [HttpPut]
@@ -40,6 +42,7 @@ namespace Controllers
         public ActionResult<Models.Parse.News> Get(int id)
         {
             Logger.LogInformation("Get news {0}", id);
+            Logger.LogInformation("Path {0}", Request.Headers[":authority"].ToString());
             return new Models.News(Db).Get(id);
         }
     }

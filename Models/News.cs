@@ -24,12 +24,13 @@ namespace Models
             Db.SaveChanges();
         }
 
-        public void Add(Parse.News parseResult)
+        public int Add(Parse.News parseResult)
         {
             Entity = new Database.News();
             FillEntityForAdd(parseResult);
             Db.Add(Entity);
             Db.SaveChanges();
+            return Entity.Id;
         }
 
         private void FillEntityForAdd(Parse.News parseResult)

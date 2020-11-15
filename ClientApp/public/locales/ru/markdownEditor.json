@@ -1,0 +1,7 @@
+{
+    "uploadImage": {
+        "title": "Загрузка изображения",
+        "saveButton": "Сохранить",
+        "cancelButton": "Отменить"
+    }
+}

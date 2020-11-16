@@ -5,6 +5,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import Button from '@material-ui/core/Button';
 import { useTranslation } from 'react-i18next';
 import { DialogActions } from '@material-ui/core';
+import CloudinaryUpload from '../CloudinaryUpload';
 
 interface Translation {
     title: string;
@@ -42,7 +43,10 @@ export default function ImageUpload({
         <Dialog open={isOpen} onClose={onClose}>
             <DialogTitle>{translation.title}</DialogTitle>
             <DialogContent>
-                <div />
+                <CloudinaryUpload
+                    image={imageName}
+                    onChange={setImageName}
+                />
             </DialogContent>
             <DialogActions>
                 <Button onClick={handleApply}>

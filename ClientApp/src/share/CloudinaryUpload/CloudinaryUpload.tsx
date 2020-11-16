@@ -56,6 +56,10 @@ function ButtonWithIcon({
     );
 }
 
+ButtonWithIcon.defaultProps = {
+    onClick: () => {},
+};
+
 interface ControlButtonGroupProps {
     onUpload: () => void;
     onRemove: () => void;

@@ -4,13 +4,10 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import ApplyIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/Clear';
 import PreviewIcon from '@material-ui/icons/Subject';
+import FloatingPanel from '../FloatingPanel';
 
 const useStyles = makeStyles((theme: Theme) => ({
     root: {
-        position: 'fixed',
-        zIndex: 100,
-        right: '1em',
-        bottom: '1em',
         '&>*': {
             marginLeft: '0.4em',
             '&:hover': {
@@ -34,7 +31,7 @@ export default function EditPageActions({
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
+        <FloatingPanel className={classes.root}>
             <Fab
                 color="primary"
                 onClick={onPreview}
@@ -53,6 +50,6 @@ export default function EditPageActions({
             >
                 <CancelIcon />
             </Fab>
-        </div>
+        </FloatingPanel>
     );
 }

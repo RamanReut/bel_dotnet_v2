@@ -68,11 +68,6 @@ function MeasurementInput({
     );
 }
 
-function cloudinaryImage() {
-    const tester = /^!\[([\w ]*)\]\(([\w/]+)\|([\d]{0,4})x([\d]{0,4})\)$/g;
-    console.log(tester.exec('![](bel_v2/hzhvrnkkzsoxmkia3gkj|400x500)'));
-}
-
 export interface ImageUploadProps {
     isOpen: boolean;
     onClose: () => void;
@@ -113,8 +108,6 @@ export default function ImageUpload({
         },
         [height, imageName, saveChange, width, handleClose],
     );
-
-    cloudinaryImage();
 
     return (
         <Dialog open={isOpen} onClose={onClose}>

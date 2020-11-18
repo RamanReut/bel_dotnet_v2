@@ -5,9 +5,44 @@ import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { useParams } from 'react-router-dom';
+import { Image } from 'cloudinary-react';
 import { selectors, actions } from '../reducer';
 import Section from '../../../share/Section';
 import LoadControl from '../../../share/LoadControl';
+
+const useCloudinaryImageStyles = makeStyles({
+    image: {
+        display: 'block',
+        maxWidth: '80%',
+        margin: 'auto',
+        objectFit: 'contain',
+    },
+});
+
+interface CloudinaryImageProps {
+    src: string;
+}
+
+function CloudinaryImage({ src }: CloudinaryImageProps) {
+    const classes = useCloudinaryImageStyles();
+
+    const tester = /([\w/]+)\|([\d]{0,4})x([\d]{0,4})/g;
+    const testResult = tester.exec(src);
+
+    if (testResult) {
+        const [all, publicId, width, height] = testResult;
+
+        return (
+            <Image
+                className={classes.image}
+                publicId={publicId}
+                width={width}
+                height={height}
+            />
+        );
+    }
+    return <div />;
+}
 
 const useStyles = makeStyles({
     root: {
@@ -55,7 +90,12 @@ export default function News(): React.ReactElement {
                 <Typography variant="h5">
                     {title}
                 </Typography>
-                <ReactMarkdown className={classes.markdown}>
+                <ReactMarkdown
+                    className={classes.markdown}
+                    renderers={{
+                        image: CloudinaryImage,
+                    }}
+                >
                     {content}
                 </ReactMarkdown>
             </Section>

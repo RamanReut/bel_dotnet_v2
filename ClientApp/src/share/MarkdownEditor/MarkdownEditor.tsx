@@ -4,7 +4,7 @@ import React, {
     ReactElement,
 } from 'react';
 import ReactMde, { Command, getDefaultToolbarCommands } from 'react-mde';
-import createImageInsertCommand from './imageInsertCommand';
+import createImageInsertCommand, { ImageData } from './imageInsertCommand';
 import ImageUpload from './ImageUpload';
 
 const TOOLBAR_COMMANDS = (() => {
@@ -25,13 +25,13 @@ export default function MarkdownEditor({
     const [isImageDialogOpen, setIsOpenDialogOpen] = useState<boolean>(false);
     // eslint-disable-next-line operator-linebreak
     const [insertImageCallback, setInsertImageCallback] =
-        useState<(image: string) => void>(() => {});
+        useState<(image: ImageData) => void>(() => {});
 
     const handleDialogOpen = useCallback(() => setIsOpenDialogOpen(true), []);
     const handleDialogClose = useCallback(() => setIsOpenDialogOpen(false), []);
     // Without this react cannot save function into state
     const handleInsertImage = useCallback(
-        (fn: (image: string) => void) => {
+        (fn: (image: ImageData) => void) => {
             setInsertImageCallback(() => fn);
         },
         [],

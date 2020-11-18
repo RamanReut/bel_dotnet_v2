@@ -76,9 +76,9 @@ export default function EditNews(): React.ReactElement {
     const handleSuccessNewPage = useCallback((resp: Response) => {
         resp.json()
             .then((data: NewPageResponseData) => {
-                history.push(`/news/${data.id}`)
+                history.push(`/news/${data.id}`);
             });
-    }, [history,]);
+    }, [history]);
 
     const handleErrorSaveChanges = useCallback(() => {
         enqueueSnackbar(t('savePageError'), {

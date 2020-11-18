@@ -30,6 +30,7 @@ function CloudinaryImage({ src }: CloudinaryImageProps) {
     const testResult = tester.exec(src);
 
     if (testResult) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const [all, publicId, width, height] = testResult;
 
         return (

@@ -1,21 +1,9 @@
 import React from 'react';
 import Fab from '@material-ui/core/Fab';
-import { makeStyles, Theme } from '@material-ui/core/styles';
 import ApplyIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/Clear';
 import PreviewIcon from '@material-ui/icons/Subject';
-import FloatingPanel from '../FloatingPanel';
-
-const useStyles = makeStyles((theme: Theme) => ({
-    root: {
-        '&>*': {
-            marginLeft: '0.4em',
-            '&:hover': {
-                backgroundColor: theme.palette.secondary.main,
-            },
-        },
-    },
-}));
+import FabPanel from '../FabPanel';
 
 export interface EditPageActionsProps {
     onApply: () => void;
@@ -28,10 +16,8 @@ export default function EditPageActions({
     onCancel,
     onPreview,
 }: EditPageActionsProps): React.ReactElement {
-    const classes = useStyles();
-
     return (
-        <FloatingPanel className={classes.root}>
+        <FabPanel>
             <Fab
                 color="primary"
                 onClick={onPreview}
@@ -50,6 +36,6 @@ export default function EditPageActions({
             >
                 <CancelIcon />
             </Fab>
-        </FloatingPanel>
+        </FabPanel>
     );
 }

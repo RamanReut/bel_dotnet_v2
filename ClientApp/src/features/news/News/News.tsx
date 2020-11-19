@@ -1,14 +1,16 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import ReactMarkdown from 'react-markdown';
 import { useSelector, useDispatch } from 'react-redux';
 import { useTranslation } from 'react-i18next';
-import { useParams } from 'react-router-dom';
+import { useHistory, useParams } from 'react-router-dom';
 import { Image } from 'cloudinary-react';
+import { useSnackbar } from 'notistack';
 import { selectors, actions } from '../reducer';
 import Section from '../../../share/Section';
 import LoadControl from '../../../share/LoadControl';
+import EditPagePreviewActions from '../../../share/EditPagePreviewActions';
 
 const useCloudinaryImageStyles = makeStyles({
     image: {
@@ -58,17 +60,86 @@ interface NewsParams {
     id: string;
 }
 
+interface SuccessNewPage {
+    id: number;
+}
+
 export default function News(): React.ReactElement {
     const classes = useStyles();
     const dispatch = useDispatch();
-    const { i18n } = useTranslation();
+    const { i18n, t } = useTranslation();
     const { id } = useParams<NewsParams>();
+    const history = useHistory();
+    const { enqueueSnackbar } = useSnackbar();
 
     const isPreview = useSelector(selectors.isPreview);
     const title = useSelector(selectors.title);
     const content = useSelector(selectors.content);
     const isLoading = useSelector(selectors.isContentLoading);
     const isLoadSuccess = useSelector(selectors.isContentLoadSuccess);
+    const previewLanguage = useSelector(selectors.language);
+
+    const handleChangePreviewLanguage = useCallback(
+        (language: string) => {
+            dispatch(actions.changeLanguage(language));
+        },
+        [dispatch],
+    );
+
+    const handleSuccessNewPage = useCallback(
+        (resp: Response) => {
+            resp
+                .json()
+                .then(({ id: pageId }: SuccessNewPage) => {
+                    history.push(`/news/${pageId}`);
+                });
+            dispatch(actions.disablePreview());
+        },
+        [dispatch, history],
+    );
+
+    const handleSuccessUpdatePage = useCallback(
+        () => dispatch(actions.disablePreview()),
+        [dispatch],
+    );
+
+    const handlePageUpdateFail = useCallback(
+        () => {
+            enqueueSnackbar(t('savePageError'), { variant: 'error' });
+        },
+        [enqueueSnackbar, t],
+    );
+
+    const handleApplyChanges = useCallback(
+        () => {
+            if (id === 'new') {
+                dispatch(actions.newPage({
+                    onFulfilled: handleSuccessNewPage,
+                    onRejected: handlePageUpdateFail,
+                }));
+            } else {
+                dispatch(actions.updatePage({
+                    pageId: parseInt(id, 10),
+                    onFulfilled: handleSuccessUpdatePage,
+                    onRejected: handlePageUpdateFail,
+                }));
+            }
+        },
+        [
+            id,
+            dispatch,
+            handleSuccessNewPage,
+            handlePageUpdateFail,
+            handleSuccessUpdatePage,
+        ],
+    );
+
+    const handleCancelChanges = useCallback(
+        () => {
+
+        },
+        [],
+    );
 
     useEffect(() => {
         if (!isPreview) {
@@ -99,6 +170,13 @@ export default function News(): React.ReactElement {
                 >
                     {content}
                 </ReactMarkdown>
+                <EditPagePreviewActions
+                    isOpen={isPreview}
+                    language={previewLanguage}
+                    onLanguageClick={handleChangePreviewLanguage}
+                    onApply={handleApplyChanges}
+                    onCancel={handleCancelChanges}
+                />
             </Section>
         </LoadControl>
     );

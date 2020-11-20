@@ -14,7 +14,7 @@ namespace Models
 
             public string PreviewImage { get; set; }
 
-            public static implicit operator Parse.News(Database.News news)
+            public static implicit operator Parse.News(Models.News news)
             {
                 return new Parse.News
                 {

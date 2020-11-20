@@ -1,69 +1,21 @@
 using System;
-using System.Linq;
-using Microsoft.EntityFrameworkCore;
-using Database;
 
 namespace Models
 {
-    public class News
+    public class News : DatabaseEntity
     {
-        DatabaseContext Db;
-        Database.News Entity;
+        public int Id { get; set; }
 
-        public News(DatabaseContext db)
+        public LocaleData Content { get; set; }
+
+        public LocaleData Title { get; set; }
+
+        public String PreviewImage { get; set; }
+
+        public News()
         {
-            Db = db;
-        }
-
-        public void Update(Parse.News parseResult)
-        {
-            GetEntityFromDatabase(parseResult.Id);
-            Entity.PreviewImage = parseResult.PreviewImage;
-            Entity.Content.SetFromParse(parseResult.Content);
-            Entity.Title.SetFromParse(parseResult.Title);
-            Db.SaveChanges();
-        }
-
-        public int Add(Parse.News parseResult)
-        {
-            Entity = new Database.News();
-            FillEntityForAdd(parseResult);
-            Db.Add(Entity);
-            Db.SaveChanges();
-            return Entity.Id;
-        }
-
-        private void FillEntityForAdd(Parse.News parseResult)
-        {
-            Entity.Content.SetFromParse(parseResult.Content);
-            Entity.Title.SetFromParse(parseResult.Title);
-            Entity.PreviewImage = parseResult.PreviewImage;
-        }
-
-        public Parse.News Get(int id)
-        {
-            try
-            {
-                GetEntityFromDatabase(id);
-            }
-            catch (InvalidOperationException)
-            {
-                throw new NotFoundException(id);
-            }
-
-            return Entity;
-        }
-
-        private void GetEntityFromDatabase(int id)
-        {
-            Entity = Db.News
-                .Include(news => news.Content)
-                .Include(news => news.Content.Ru)
-                .Include(news => news.Content.Be)
-                .Include(news => news.Title)
-                .Include(news => news.Title.Ru)
-                .Include(news => news.Title.Be)
-                .First(news => news.Id == id);
+            Content = new LocaleData();
+            Title = new LocaleData();
         }
     }
 }

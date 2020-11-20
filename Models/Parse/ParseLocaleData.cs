@@ -10,7 +10,7 @@ namespace Models
 
             public string Be { get; set; }
 
-            public static implicit operator ParseLocaleData(Database.LocaleData locale)
+            public static implicit operator ParseLocaleData(Models.LocaleData locale)
             {
                 return new ParseLocaleData
                 {

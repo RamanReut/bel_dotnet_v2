@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using Models;
+using Repositories;
 using Database;
 
 namespace Controllers
@@ -25,7 +25,7 @@ namespace Controllers
         public IActionResult Add(Models.Parse.News news)
         {
             Logger.LogInformation("Create new news");
-            var id = new Models.News(Db).Add(news);
+            var id = new NewsRepository(Db).Add(news);
             return new CreatedAtActionResult(
                 nameof(Get), "news", new { id = id }, new { id = id });
         }
@@ -34,7 +34,7 @@ namespace Controllers
         public IActionResult Update(Models.Parse.News news)
         {
             Logger.LogInformation("Update news {0}", news.Id);
-            new Models.News(Db).Update(news);
+            new NewsRepository(Db).Update(news);
             return new OkResult();
         }
 
@@ -47,7 +47,7 @@ namespace Controllers
 
             try 
             {    
-                news = (new Models.News(Db)).Get(id);
+                news = (new NewsRepository(Db)).Get(id);
             }
             catch (NotFoundException ex)
             {

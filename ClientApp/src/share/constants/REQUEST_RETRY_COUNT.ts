@@ -1,0 +1,3 @@
+const REQUEST_RETRY_COUNT = 5;
+
+export default REQUEST_RETRY_COUNT;

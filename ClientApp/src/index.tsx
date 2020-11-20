@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import { ThemeProvider } from '@material-ui/core/styles';
 import { Provider } from 'react-redux';
+import { CloudinaryContext } from 'cloudinary-react';
+import { SnackbarProvider } from 'notistack';
 import App from './App';
 import * as serviceWorker from './registerServiceWorker';
 import { basicTheme } from './features/theme';
@@ -13,7 +15,11 @@ ReactDOM.render(
     <React.StrictMode>
         <Provider store={store}>
             <ThemeProvider theme={basicTheme}>
-                <App />
+                <SnackbarProvider>
+                    <CloudinaryContext cloudName={process.env.REACT_APP_CLOUD_NAME}>
+                        <App />
+                    </CloudinaryContext>
+                </SnackbarProvider>
             </ThemeProvider>
         </Provider>
     </React.StrictMode>,

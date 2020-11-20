@@ -55,6 +55,7 @@
           {
             "when": "multiline"
           }
-        ]
+        ],
+        "react/jsx-props-no-spreading": [0]
       }
 }

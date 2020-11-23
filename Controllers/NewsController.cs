@@ -38,6 +38,14 @@ namespace Controllers
             return new OkResult();
         }
 
+        [HttpGet("list/{count}")]
+        public ActionResult<Models.Parse.News[]> GetList(int count)
+        {
+            Logger.LogInformation("Get news list with length {0}", count);
+            Models.Parse.News[] arr = (new NewsRepository(Db).GetLast(count));
+            return arr;
+        }
+
         [HttpGet("{id}")]
         public ActionResult<Models.Parse.News> Get(int id)
         {

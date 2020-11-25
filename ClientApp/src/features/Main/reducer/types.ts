@@ -6,9 +6,7 @@ export interface News {
     title: TranslationContainer<string>;
 }
 
-export interface NewsState {
-    [index: number]: News;
-}
+export type NewsState = Array<News>;
 
 export interface MainState {
     news: NewsState;

@@ -9,7 +9,10 @@ import getNewList from '../services/getNewsList';
 
 const SLICE_NAME = `${ROOT_REDUCER_NAME}/news`;
 
-const initialState: NewsState = [];
+const initialState: NewsState = {
+    newsList: [],
+    listOrder: [],
+};
 
 const getNews = createAsyncThunk(
     `${SLICE_NAME}/getNews`,
@@ -23,7 +26,20 @@ const newsSlice = createSlice({
     extraReducers: (builder) => {
         builder.addCase(
             getNews.fulfilled,
-            (state: NewsState, { payload }: PayloadAction<News[]>) => payload,
+            (state: NewsState, { payload }: PayloadAction<News[]>) => {
+                const lst: Record<number, News> = {};
+                const order = new Array<number>();
+
+                payload.forEach((news) => {
+                    lst[news.id] = news;
+                    order.push(news.id);
+                });
+
+                return {
+                    newsList: lst,
+                    listOrder: order,
+                };
+            },
         );
     },
 });

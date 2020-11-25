@@ -1,12 +1,27 @@
-import { createSelector } from '@reduxjs/toolkit';
-import { RootState, MainState } from './types';
+import { createSelector, OutputSelector } from '@reduxjs/toolkit';
+import * as types from './types';
 
-function rootSelector(store: RootState): MainState {
+function rootSelector(store: types.RootState): types.MainState {
     return store.main;
 }
 
-// eslint-disable-next-line import/prefer-default-export
-export const news = createSelector(
+const newsStateSelector = createSelector(
     rootSelector,
-    (main: MainState) => main.news,
+    (main) => main.news,
 );
+
+export const newsList = createSelector(
+    newsStateSelector,
+    (newsState) => newsState.listOrder.map(
+        (elem) => newsState.newsList[elem],
+    ),
+);
+
+export function news(
+    id: number,
+): OutputSelector<types.RootState, types.News, (res: types.NewsState) => types.News> {
+    return createSelector(
+        newsStateSelector,
+        (newsState) => newsState.newsList[id],
+    );
+}

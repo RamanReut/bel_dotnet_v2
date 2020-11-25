@@ -6,7 +6,10 @@ export interface News {
     title: TranslationContainer<string>;
 }
 
-export type NewsState = Array<News>;
+export interface NewsState {
+    newsList: Record<number, News>;
+    listOrder: Array<number>;
+}
 
 export interface MainState {
     news: NewsState;

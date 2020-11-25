@@ -14,6 +14,7 @@ export default function Carousel({
         <ResponsiveCarousel
             infiniteLoop
             showIndicators={false}
+            showThumbs={false}
         >
             {slides.map((slide) => (
                 <Slide

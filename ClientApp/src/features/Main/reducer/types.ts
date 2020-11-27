@@ -11,8 +11,13 @@ export interface NewsState {
     listOrder: Array<number>;
 }
 
+export interface CarouselState {
+    currentSlide: number;
+}
+
 export interface MainState {
     news: NewsState;
+    carousel: CarouselState;
 }
 
 export interface RootState {

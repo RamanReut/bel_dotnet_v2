@@ -3,13 +3,13 @@ import { Image } from 'cloudinary-react';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import { Link } from 'react-router-dom';
-import { NEWS_HEIGHT } from '../constants';
+
+const ASPECT_RATIO = 2;
 
 const useSlideStyles = makeStyles((theme) => ({
     root: {
         display: 'block',
         position: 'relative',
-        height: NEWS_HEIGHT,
         '&:hover $title': {
             height: '60%',
         },
@@ -28,7 +28,6 @@ const useSlideStyles = makeStyles((theme) => ({
         paddingTop: '1.5em',
     },
     image: {
-        height: NEWS_HEIGHT,
         objectFit: 'cover',
     },
 }));
@@ -52,6 +51,10 @@ function Slide({
             to={link}
         >
             <Image
+                responsive
+                aspectRatio={ASPECT_RATIO}
+                width="auto"
+                crop="fill"
                 className={classes.image}
                 publicId={img}
             />

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import {
     createSlice,
     createAsyncThunk,
@@ -35,10 +36,8 @@ const newsSlice = createSlice({
                     order.push(news.id);
                 });
 
-                return {
-                    newsList: lst,
-                    listOrder: order,
-                };
+                state.newsList = lst;
+                state.listOrder = order;
             },
         );
     },

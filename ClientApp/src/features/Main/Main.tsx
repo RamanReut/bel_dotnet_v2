@@ -1,10 +1,10 @@
 import React from 'react';
-import NewsCarousel from './NewsCarousel/NewsCarousel';
+import Carousel from './Carousel/Carousel';
 
 export default function Main(): React.ReactElement {
     return (
         <div>
-            <NewsCarousel />
+            <Carousel />
         </div>
     );
 }

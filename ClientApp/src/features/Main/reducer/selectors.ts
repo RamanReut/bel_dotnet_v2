@@ -10,6 +10,11 @@ const newsStateSelector = createSelector(
     (main) => main.news,
 );
 
+const carouselStateSelector = createSelector(
+    rootSelector,
+    (main) => main.carousel,
+);
+
 export const newsList = createSelector(
     newsStateSelector,
     (newsState) => newsState.listOrder.map(
@@ -25,3 +30,8 @@ export function news(
         (newsState) => newsState.newsList[id],
     );
 }
+
+export const currentSlide = createSelector(
+    carouselStateSelector,
+    (carouselState) => carouselState.currentSlide,
+);

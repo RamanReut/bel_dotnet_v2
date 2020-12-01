@@ -17,7 +17,10 @@ function LoadMoreButton({ onClick }: LoadMoreButtonProps): ReactElement {
 
     if (onClick) {
         return (
-            <Button fullWidth>
+            <Button
+                fullWidth
+                onClick={onClick}
+            >
                 {t('loadMore')}
             </Button>
         );

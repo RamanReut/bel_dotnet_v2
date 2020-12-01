@@ -35,3 +35,8 @@ export const currentSlide = createSelector(
     carouselStateSelector,
     (carouselState) => carouselState.currentSlide,
 );
+
+export const isLoading = createSelector(
+    newsStateSelector,
+    (newsState) => newsState.isLoading,
+);

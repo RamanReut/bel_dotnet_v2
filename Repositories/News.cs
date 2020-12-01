@@ -55,15 +55,15 @@ namespace Repositories
             return Entity[0];
         }
 
-        public Models.Parse.News[] GetLast(int count)
+        public Models.Parse.News[] GetBetween(int start, int end)
         {
-            GetLastEntityFromDatabase(count);
+            GetEntitiesBetween(start, end);
             var parseArray = 
                 Array.ConvertAll<News, Models.Parse.News>(Entity, (elem) => elem);
             return parseArray;
         }
 
-        private void GetLastEntityFromDatabase(int count)
+        private void GetEntitiesBetween(int start, int end)
         {
             Entity = 
                 Db.News
@@ -71,7 +71,8 @@ namespace Repositories
                     .Include(news => news.Title.Ru)
                     .Include(news => news.Title.Be)
                     .OrderByDescending(news => news.CreatedDate)
-                    .Take(count)
+                    .Skip(start)
+                    .Take(end - start)
                     .ToArray();
         }
 

@@ -9,6 +9,7 @@ export interface News {
 export interface NewsState {
     newsList: Record<number, News>;
     listOrder: Array<number>;
+    isLoading: boolean;
 }
 
 export interface CarouselState {

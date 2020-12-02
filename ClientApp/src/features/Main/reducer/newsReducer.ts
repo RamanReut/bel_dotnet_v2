@@ -9,7 +9,7 @@ import { NewsState, News, RootState } from './types';
 import { newsList } from './selectors';
 import getNewsList from '../services/getNewsList';
 
-const REQUEST_ITEM_COUNT = 10;
+const REQUEST_ITEM_COUNT = 5;
 const SLICE_NAME = `${ROOT_REDUCER_NAME}/news`;
 
 const initialState: NewsState = {

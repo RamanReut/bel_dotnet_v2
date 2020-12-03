@@ -16,9 +16,9 @@ function News(): ReactElement {
 
     const handleLoadMoreReject = useCallback(
         () => {
-            enqueueSnackbar('', { variant: 'error' });
+            enqueueSnackbar(t('loadError'), { variant: 'error' });
         },
-        [enqueueSnackbar],
+        [enqueueSnackbar, t],
     );
 
     const handleLoadMore = useCallback(

@@ -7,7 +7,7 @@ import {
 import { ROOT_REDUCER_NAME } from './constants';
 import { NewsState, News, RootState } from './types';
 import { newsList } from './selectors';
-import getNewsList from '../services/getNewsList';
+import * as services from '../services';
 
 const REQUEST_ITEM_COUNT = 5;
 const SLICE_NAME = `${ROOT_REDUCER_NAME}/news`;
@@ -20,19 +20,45 @@ const initialState: NewsState = {
 
 const initNews = createAsyncThunk(
     `${SLICE_NAME}/initNews`,
-    async () => getNewsList(0, REQUEST_ITEM_COUNT),
+    async () => services.getNewsList(0, REQUEST_ITEM_COUNT),
 );
 
 const getNews = createAsyncThunk(
     `${SLICE_NAME}/getNews`,
     async (onRejected: () => void, thunkApi) => {
         const start = newsList(thunkApi.getState() as RootState).length;
-        return getNewsList(start, start + REQUEST_ITEM_COUNT)
+        return services.getNewsList(start, start + REQUEST_ITEM_COUNT)
             .catch((reason) => {
                 onRejected();
                 throw reason;
             }) as Promise<News[]>;
     },
+);
+
+interface DeleteNewsProps {
+    id: number,
+    onFulfilled: (id: number) => void,
+    onRejected: () => void,
+}
+
+const deleteNews = createAsyncThunk(
+    `${SLICE_NAME}/deleteNews`,
+    async ({
+        id,
+        onFulfilled,
+        onRejected,
+    }: DeleteNewsProps) => services
+        .deleteNews(id)
+        .then(
+            (value) => {
+                onFulfilled(value);
+                return value;
+            },
+            (err) => {
+                onRejected();
+                throw err;
+            },
+        ),
 );
 
 const newsSlice = createSlice({
@@ -79,6 +105,15 @@ const newsSlice = createSlice({
                 state.isLoading = false;
             },
         );
+        builder.addCase(
+            deleteNews.fulfilled,
+            (state: NewsState, { payload }: PayloadAction<number>) => {
+                delete state.newsList[payload];
+                state.listOrder = state.listOrder.filter(
+                    (value) => value !== payload,
+                );
+            },
+        );
     },
 });
 
@@ -87,4 +122,5 @@ export const actions = {
     ...newsSlice.actions,
     getNews,
     initNews,
+    deleteNews,
 };

@@ -33,7 +33,8 @@ function News(): ReactElement {
             img: elem.preview,
             title: getTranslation<string>(elem.title, i18n.language),
             link: `/news/${elem.id}`,
-            editLink: `/editNews/${elem.id}`,
+            edit: `/editNews/${elem.id}`,
+            remove: () => '/',
         })),
         [i18n.language, news],
     );

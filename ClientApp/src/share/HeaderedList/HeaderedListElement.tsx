@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, ComponentType } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import IconButton from '@material-ui/core/IconButton';
 import Grid from '@material-ui/core/Grid';
@@ -16,20 +16,33 @@ const useActionButtonStyles = makeStyles({
 
 interface ActionButtonProps {
     icon: ReactElement;
-    link: string;
+    action: string | (() => void);
+}
+
+interface ButtonProps {
+    component?: ComponentType<any>;
+    to?: string;
+    onClick?: () => void;
 }
 
 function ActionButton({
     icon,
-    link,
+    action,
 }: ActionButtonProps) {
     const classes = useActionButtonStyles();
+    const buttonProps: ButtonProps = {};
+
+    if (typeof action === 'string') {
+        buttonProps.component = Link;
+        buttonProps.to = action;
+    } else {
+        buttonProps.onClick = action;
+    }
 
     return (
         <IconButton
             className={classes.root}
-            component={Link}
-            to={link}
+            {...buttonProps}
         >
             {icon}
         </IconButton>
@@ -71,14 +84,16 @@ export interface HeaderedListElementProps {
     img: string;
     title: string;
     link: string;
-    editLink: string;
+    edit: string | (() => void);
+    remove: string | (() => void);
 }
 
 function HeaderedListElement({
     img,
     title,
     link,
-    editLink,
+    edit,
+    remove,
 }: HeaderedListElementProps): ReactElement {
     const classes = useStyles();
 
@@ -115,11 +130,11 @@ function HeaderedListElement({
             <div>
                 <ActionButton
                     icon={<EditIcon />}
-                    link={editLink}
+                    action={edit}
                 />
                 <ActionButton
                     icon={<DeleteIcon />}
-                    link="/"
+                    action={remove}
                 />
             </div>
         </ListItem>

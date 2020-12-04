@@ -9,5 +9,6 @@ export default i18n
     .use(initReactI18next)
     .init({
         fallbackLng: 'ru',
+        supportedLngs: ['ru', 'be'],
         defaultNS: 'common',
     });

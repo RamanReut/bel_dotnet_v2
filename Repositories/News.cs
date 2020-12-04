@@ -63,6 +63,15 @@ namespace Repositories
             return parseArray;
         }
 
+        public void DeleteEntityFromDatabase(int id)
+        {
+            GetEntityFromDatabase(id);
+            (new LocaleDataRepository(Db, Entity[0].Title)).CascadeDelete();
+            (new LocaleDataRepository(Db, Entity[0].Content)).CascadeDelete();
+            Db.Remove<Models.News>(Entity[0]);
+            Db.SaveChanges();
+        }
+
         private void GetEntitiesBetween(int start, int end)
         {
             Entity = 

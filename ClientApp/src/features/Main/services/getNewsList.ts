@@ -2,8 +2,6 @@ import ky from 'ky';
 import { REQUEST_RETRY_COUNT } from '../../../share/constants';
 import { News } from '../reducer/types';
 
-const REQUEST_ITEM_COUNT = 10;
-
 interface NewsRequestData {
     id: number;
     title: {
@@ -13,9 +11,9 @@ interface NewsRequestData {
     previewImage: string;
 }
 
-export default async function getNewList(): Promise<News[]> {
+async function getNewsList(start: number, end: number): Promise<News[]> {
     const res = await ky.get(
-        `/api/news/list/${REQUEST_ITEM_COUNT}`,
+        `/api/news/list/${start}/${end}`,
         {
             retry: REQUEST_RETRY_COUNT,
         },
@@ -27,3 +25,5 @@ export default async function getNewList(): Promise<News[]> {
         preview: elem.previewImage,
     }));
 }
+
+export default getNewsList;

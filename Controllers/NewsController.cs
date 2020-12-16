@@ -38,11 +38,13 @@ namespace Controllers
             return new OkResult();
         }
 
-        [HttpGet("list/{count}")]
-        public ActionResult<Models.Parse.News[]> GetList(int count)
+        [HttpGet("list/{start}/{end}")]
+        public ActionResult<Models.Parse.News[]> GetList(int start, int end)
         {
-            Logger.LogInformation("Get news list with length {0}", count);
-            Models.Parse.News[] arr = (new NewsRepository(Db).GetLast(count));
+            Logger.LogInformation(
+                "Get news list started from {0} and ended to {1}", start, end);
+            Models.Parse.News[] arr = 
+                (new NewsRepository(Db).GetBetween(start, end));
             return arr;
         }
 
@@ -64,6 +66,14 @@ namespace Controllers
             }
 
             return news;
+        }
+
+        [HttpDelete("{id}")]
+        public JsonResult Delete(int id)
+        {
+            Logger.LogInformation("Delete news with id {0}", id);
+            (new NewsRepository(Db)).DeleteEntityFromDatabase(id);
+            return new JsonResult(new { id = id });
         }
     }
 }

@@ -72,11 +72,6 @@ export default function NewsCarousel(): React.ReactElement {
     );
 
     useEffect(
-        () => { dispatch(actions.news.getNews()); },
-        [dispatch],
-    );
-
-    useEffect(
         () => {
             handleResetChangeSlideTimeout();
             return () => clearTimeout(timerRef.current);

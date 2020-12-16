@@ -1,4 +1,4 @@
 import getNewsList from './getNewsList';
+import deleteNews from './deleteNews';
 
-// eslint-disable-next-line import/prefer-default-export
-export { getNewsList };
+export { getNewsList, deleteNews };

@@ -63,6 +63,7 @@ const useStyles = makeStyles((theme) => ({
         overflow: 'hidden',
         flexGrow: 1,
         flexShrink: 1,
+        color: theme.palette.text.primary,
         '&:visited': {
             color: theme.palette.text.primary,
         },

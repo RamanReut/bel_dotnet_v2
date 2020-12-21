@@ -81,7 +81,7 @@ namespace Repositories
                     .Include(news => news.Title.Be)
                     .OrderByDescending(news => news.CreatedDate)
                     .Skip(start)
-                    .Take(end - start)
+                    .Take(end - start + 1)
                     .ToArray();
         }
 

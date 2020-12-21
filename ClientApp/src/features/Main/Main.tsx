@@ -8,7 +8,7 @@ export default function Main(): React.ReactElement {
     const dispatch = useDispatch();
 
     useEffect(
-        () => { dispatch(actions.news.initNews()); },
+        () => { dispatch(actions.news.initNewsList()); },
         [dispatch],
     );
 

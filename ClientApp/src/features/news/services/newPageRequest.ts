@@ -2,8 +2,8 @@ import ky from 'ky';
 import { Page } from './types';
 import { REQUEST_RETRY_COUNT } from '../../../share/constants';
 
-async function newPageRequest(data: Page): Promise<Response> {
-    return ky.post(
+async function newPageRequest(data: Page): Promise<number> {
+    return parseInt(await ky.post(
         '/api/news',
         {
             json: {
@@ -13,7 +13,7 @@ async function newPageRequest(data: Page): Promise<Response> {
             },
             retry: REQUEST_RETRY_COUNT,
         },
-    );
+    ).text(), 10);
 }
 
 export default newPageRequest;

@@ -4,37 +4,41 @@ import React, {
     useCallback,
     useState,
 } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import {
+    useSelector,
+} from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import { getTranslation } from '../../../share/translationContainer';
 import HeaderedList from '../../../share/HeaderedList';
-import { selectors, actions } from '../reducer';
+import { useAppDispatch } from '../../store';
+import {
+    selectors,
+    actions,
+} from '../reducer';
 import RemoveDialog from './RemoveDialog';
 
 function News(): ReactElement {
     const { t, i18n } = useTranslation(['common', 'main']);
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { enqueueSnackbar } = useSnackbar();
 
-    const news = useSelector(selectors.newsList);
-    const isLoading = useSelector(selectors.isLoading);
+    const news = useSelector(selectors.news.newsList);
+    const isLoading = useSelector(selectors.news.isLoading);
 
     const [removeDialogIsOpen, setRemoveDialogIsOpen] = useState<boolean>(false);
     const [removeNewsId, setRemoveNewsId] = useState<number>(0);
 
-    const handleLoadMoreReject = useCallback(
-        () => {
-            enqueueSnackbar(t('loadError'), { variant: 'error' });
-        },
-        [enqueueSnackbar, t],
-    );
-
     const handleLoadMore = useCallback(
         () => {
-            dispatch(actions.news.getNews(handleLoadMoreReject));
+            dispatch(actions.news.loadNewsMore())
+                .then(unwrapResult)
+                .catch(() => {
+                    enqueueSnackbar(t('loadError'), { variant: 'error' });
+                });
         },
-        [dispatch, handleLoadMoreReject],
+        [dispatch, enqueueSnackbar, t],
     );
 
     const handleRemoveDialogClose = useCallback(
@@ -52,7 +56,7 @@ function News(): ReactElement {
 
     const newsListElements = useMemo(
         () => news.map((elem) => ({
-            img: elem.preview,
+            img: elem.previewImage,
             title: getTranslation<string>(elem.title, i18n.language),
             link: `/news/${elem.id}`,
             edit: `/editNews/${elem.id}`,

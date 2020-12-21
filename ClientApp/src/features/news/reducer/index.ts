@@ -1,4 +1,4 @@
-import selectors from './selectors';
+import { RootState } from './types';
 
 export * from './reducer';
-export { selectors };
+export type { RootState };

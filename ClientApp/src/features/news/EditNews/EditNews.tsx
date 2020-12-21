@@ -1,13 +1,24 @@
-import React, { useCallback, useEffect } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {
+    useCallback,
+    useEffect,
+} from 'react';
+import {
+    useHistory,
+    useParams,
+} from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import { makeStyles } from '@material-ui/core/styles';
 import { useTranslation } from 'react-i18next';
-import { useHistory, useParams } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
+import { useAppDispatch } from '../../store';
 import Section from '../../../share/Section';
-import { selectors, actions } from '../reducer';
+import {
+    selectors,
+    actions,
+} from '../reducer';
 import SelectLanguage from '../../../share/SelectLanguage';
 import EditPageActions from '../../../share/EditPageActions';
 import CloudinaryUpload from '../../../share/CloudinaryUpload';
@@ -24,60 +35,49 @@ const useStyles = makeStyles({
     },
 });
 
-interface NewPageResponseData {
-    id: number;
-}
-
 interface EditPageParams {
     id: string;
 }
 
 export default function EditNews(): React.ReactElement {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const classes = useStyles();
     const { t } = useTranslation();
     const history = useHistory();
     const params = useParams<EditPageParams>();
     const { enqueueSnackbar } = useSnackbar();
 
-    const content = useSelector(selectors.content);
-    const lang = useSelector(selectors.language);
-    const title = useSelector(selectors.title);
-    const previewImage = useSelector(selectors.previewImage);
+    const content = useSelector(selectors.edit.content);
+    const lang = useSelector(selectors.edit.language);
+    const title = useSelector(selectors.edit.title);
+    const previewImage = useSelector(selectors.edit.previewImage);
 
     const handleChangeContent = useCallback((value: string) => {
-        dispatch(actions.changeContent(value));
+        dispatch(actions.edit.changeContent(value));
     }, [dispatch]);
 
     const handleChangeEditLanguage = useCallback((value: string) => {
-        dispatch(actions.changeLanguage(value));
+        dispatch(actions.edit.changeLanguage(value));
     }, [dispatch]);
 
     const handleChangeTitle = useCallback(
         (event: React.ChangeEvent<HTMLInputElement>) => {
-            dispatch(actions.changeTitle(event.target.value));
+            dispatch(actions.edit.changeTitle(event.target.value));
         },
         [dispatch],
     );
 
     const handleChangePreviewImage = useCallback((imageId: string) => {
-        dispatch(actions.changePreviewImage(imageId));
+        dispatch(actions.edit.changePreviewImage(imageId));
     }, [dispatch]);
 
     const handlePreview = useCallback(() => {
-        dispatch(actions.enablePreview());
+        dispatch(actions.common.enablePreview());
         history.push(`/news/${params.id}`);
     }, [history, params, dispatch]);
 
-    const handleSuccessUpdatePage = useCallback(() => {
-        history.push(`/news/${params.id}`);
-    }, [history, params.id]);
-
-    const handleSuccessNewPage = useCallback((resp: Response) => {
-        resp.json()
-            .then((data: NewPageResponseData) => {
-                history.push(`/news/${data.id}`);
-            });
+    const handleSuccessSavePage = useCallback((id) => {
+        history.push(`/news/${id}`);
     }, [history]);
 
     const handleErrorSaveChanges = useCallback(() => {
@@ -88,36 +88,27 @@ export default function EditNews(): React.ReactElement {
 
     const handleApply = useCallback(
         () => {
-            if (params.id === 'new') {
-                dispatch(actions.newPage({
-                    onFulfilled: handleSuccessNewPage,
-                    onRejected: handleErrorSaveChanges,
-                }));
-            } else {
-                dispatch(actions.updatePage({
-                    pageId: parseInt(params.id, 10),
-                    onFulfilled: handleSuccessUpdatePage,
-                    onRejected: handleErrorSaveChanges,
-                }));
-            }
+            dispatch(actions.edit.savePage())
+                .then(unwrapResult)
+                .then(handleSuccessSavePage)
+                .catch(handleErrorSaveChanges);
         },
-        [
-            dispatch,
-            handleErrorSaveChanges,
-            handleSuccessNewPage,
-            handleSuccessUpdatePage,
-            params.id,
-        ],
+        [dispatch, handleErrorSaveChanges, handleSuccessSavePage],
     );
 
     useEffect(() => {
-        dispatch(actions.disablePreview());
+        dispatch(actions.common.disablePreview());
     }, [dispatch]);
 
     useEffect(() => {
-        if (params.id !== 'new') {
-            dispatch(actions.getPageData(parseInt(params.id, 10)));
-        }
+        const id = (() => {
+            if (params.id === 'new') {
+                return 'new';
+            }
+            return parseInt(params.id, 10);
+        })();
+
+        dispatch(actions.edit.initWithNews(id));
     }, [dispatch, params.id]);
 
     return (

@@ -1,126 +1,137 @@
-/* eslint-disable no-param-reassign */
 import {
     createSlice,
+    createSelector,
     createAsyncThunk,
+    unwrapResult,
     PayloadAction,
 } from '@reduxjs/toolkit';
+import {
+    actions as newsActions,
+    selectors as newsSelectors,
+    RootState as NewsRootState,
+} from '../../news/reducer';
+import rootSelector from './rootSelector';
 import { ROOT_REDUCER_NAME } from './constants';
-import { NewsState, News, RootState } from './types';
-import { newsList } from './selectors';
-import * as services from '../services';
+import {
+    NewsState,
+    RootState,
+    News,
+} from './types';
 
-const REQUEST_ITEM_COUNT = 5;
-const SLICE_NAME = `${ROOT_REDUCER_NAME}/news`;
+const REDUCER_NAME = `${ROOT_REDUCER_NAME}/news`;
+const REQUEST_COUNT = 5;
+
+const newsStateSelector = createSelector(
+    rootSelector,
+    (main) => main.news,
+);
+
+interface CombineRootState extends RootState, NewsRootState {}
+
+const selectors = {
+    isLoading: createSelector(
+        newsStateSelector,
+        (news) => news.isLoading,
+    ),
+    newsList: (state: CombineRootState): Array<News> => {
+        const { showCount } = newsStateSelector(state);
+
+        return newsSelectors.data.newsList(0, showCount - 1)(state);
+    },
+};
+
+const initNewsList = createAsyncThunk(
+    `${REDUCER_NAME}/initNewsList`,
+    async (_, { dispatch }) => {
+        unwrapResult(
+            await dispatch(
+                newsActions.data.initShortNewsList({
+                    start: 0,
+                    end: REQUEST_COUNT - 1,
+                }),
+            ),
+        );
+
+        return REQUEST_COUNT;
+    },
+);
+
+const loadNewsMore = createAsyncThunk(
+    `${REDUCER_NAME}/loadNews}`,
+    async (_, { dispatch, getState }) => {
+        const showCount = newsStateSelector(
+            getState() as RootState,
+        ).showCount + REQUEST_COUNT;
+
+        unwrapResult(
+            await dispatch(
+                newsActions.data.initShortNewsList({
+                    start: 0,
+                    end: showCount,
+                }),
+            ),
+        );
+
+        return showCount;
+    },
+);
 
 const initialState: NewsState = {
-    newsList: {},
-    listOrder: [],
+    showCount: 0,
     isLoading: false,
 };
 
-const initNews = createAsyncThunk(
-    `${SLICE_NAME}/initNews`,
-    async () => services.getNewsList(0, REQUEST_ITEM_COUNT),
-);
-
-const getNews = createAsyncThunk(
-    `${SLICE_NAME}/getNews`,
-    async (onRejected: () => void, thunkApi) => {
-        const start = newsList(thunkApi.getState() as RootState).length;
-        return services.getNewsList(start, start + REQUEST_ITEM_COUNT)
-            .catch((reason) => {
-                onRejected();
-                throw reason;
-            }) as Promise<News[]>;
-    },
-);
-
-interface DeleteNewsProps {
-    id: number,
-    onFulfilled: (id: number) => void,
-    onRejected: () => void,
-}
-
-const deleteNews = createAsyncThunk(
-    `${SLICE_NAME}/deleteNews`,
-    async ({
-        id,
-        onFulfilled,
-        onRejected,
-    }: DeleteNewsProps) => services
-        .deleteNews(id)
-        .then(
-            (value) => {
-                onFulfilled(value);
-                return value;
-            },
-            (err) => {
-                onRejected();
-                throw err;
-            },
-        ),
-);
-
-const newsSlice = createSlice({
-    name: SLICE_NAME,
+const slice = createSlice({
+    name: REDUCER_NAME,
     initialState,
     reducers: {},
     extraReducers: (builder) => {
-        builder.addCase(
-            initNews.fulfilled,
-            (state: NewsState, { payload }: PayloadAction<News[]>) => {
-                const lst: Record<number, News> = {};
-                const order = new Array<number>();
-
-                payload.forEach((news) => {
-                    lst[news.id] = news;
-                    order.push(news.id);
-                });
-
-                state.newsList = lst;
-                state.listOrder = order;
-            },
-        );
-        builder.addCase(
-            getNews.pending,
-            (state: NewsState) => {
-                state.isLoading = true;
-            },
-        );
-        builder.addCase(
-            getNews.fulfilled,
-            (state: NewsState, { payload }: PayloadAction<News[]>) => {
-                payload.forEach((news) => {
-                    state.newsList[news.id] = news;
-                    if (!state.listOrder.includes(news.id)) {
-                        state.listOrder.push(news.id);
-                    }
-                });
-                state.isLoading = false;
-            },
-        );
-        builder.addCase(
-            getNews.rejected,
-            (state: NewsState) => {
-                state.isLoading = false;
-            },
-        );
-        builder.addCase(
-            deleteNews.fulfilled,
-            (state: NewsState, { payload }: PayloadAction<number>) => {
-                delete state.newsList[payload];
-                state.listOrder = state.listOrder.filter(
-                    (value) => value !== payload,
-                );
-            },
-        );
+        builder
+            .addCase(
+                loadNewsMore.pending,
+                (state) => {
+                    state.isLoading = true;
+                },
+            )
+            .addCase(
+                loadNewsMore.fulfilled,
+                (state, { payload }: PayloadAction<number>) => {
+                    state.isLoading = false;
+                    state.showCount = payload;
+                },
+            )
+            .addCase(
+                loadNewsMore.rejected,
+                (state) => {
+                    state.isLoading = false;
+                },
+            )
+            .addCase(
+                initNewsList.pending,
+                (state) => {
+                    state.isLoading = true;
+                },
+            )
+            .addCase(
+                initNewsList.fulfilled,
+                (state, { payload }: PayloadAction<number>) => {
+                    state.isLoading = false;
+                    state.showCount = payload;
+                },
+            )
+            .addCase(
+                initNewsList.rejected,
+                (state) => {
+                    state.isLoading = false;
+                },
+            );
     },
 });
 
-export const { reducer } = newsSlice;
 export const actions = {
-    ...newsSlice.actions,
-    getNews,
-    initNews,
-    deleteNews,
+    ...slice.actions,
+    loadNewsMore,
+    initNewsList,
 };
+export const { reducer } = slice;
+export { selectors };

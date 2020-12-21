@@ -2,13 +2,12 @@ import { TranslationContainer } from '../../../share/translationContainer';
 
 export interface News {
     id: number;
-    preview: string;
+    previewImage: string;
     title: TranslationContainer<string>;
 }
 
 export interface NewsState {
-    newsList: Record<number, News>;
-    listOrder: Array<number>;
+    showCount: number;
     isLoading: boolean;
 }
 

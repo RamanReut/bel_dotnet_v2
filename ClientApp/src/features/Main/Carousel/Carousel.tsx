@@ -35,15 +35,15 @@ export default function NewsCarousel(): React.ReactElement {
     const classes = useStyles();
     const { i18n } = useTranslation();
 
-    const news = useSelector(selectors.newsList);
-    const currentSlide = useSelector(selectors.currentSlide);
+    const news = useSelector(selectors.news.newsList);
+    const currentSlide = useSelector(selectors.carousel.currentSlide);
 
     const timerRef = useRef<number>(0);
 
     const slides = useMemo(
         () => news.map((elem) => ({
             id: elem.id,
-            img: elem.preview,
+            img: elem.previewImage,
             title: getTranslation(elem.title, i18n.language),
             link: `/news/${elem.id}`,
         })),

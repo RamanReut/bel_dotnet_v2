@@ -1,14 +1,22 @@
-import reducer from './reducer';
-import { actions as news } from './newsReducer';
-import { actions as carousel } from './carouselReducer';
-import * as selectors from './selectors';
+import { combineReducers } from '@reduxjs/toolkit';
+import * as news from './newsReducer';
+import * as carousel from './carouselReducer';
 import * as types from './types';
 
-export default reducer;
-
-export { selectors, types };
+const reducer = combineReducers({
+    news: news.reducer,
+    carousel: carousel.reducer,
+});
 
 export const actions = {
-    news,
-    carousel,
+    news: news.actions,
+    carousel: carousel.actions,
 };
+
+export const selectors = {
+    news: news.selectors,
+    carousel: carousel.selectors,
+};
+
+export { types };
+export default reducer;

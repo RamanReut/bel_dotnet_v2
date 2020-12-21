@@ -11,7 +11,7 @@ interface NewsRequestData {
     previewImage: string;
 }
 
-async function getNewsList(start: number, end: number): Promise<News[]> {
+async function getNewsListByDescentOrder(start: number, end: number): Promise<News[]> {
     const res = await ky.get(
         `/api/news/list/${start}/${end}`,
         {
@@ -20,10 +20,9 @@ async function getNewsList(start: number, end: number): Promise<News[]> {
     ).json<NewsRequestData[]>();
 
     return res.map((elem) => ({
-        id: elem.id,
-        title: elem.title,
-        preview: elem.previewImage,
+        type: 'short',
+        ...elem,
     }));
 }
 
-export default getNewsList;
+export default getNewsListByDescentOrder;

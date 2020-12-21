@@ -1,13 +1,21 @@
-import React, { ReactElement, useCallback } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import React, {
+    ReactElement,
+    useCallback,
+} from 'react';
+import { useSelector } from 'react-redux';
+import { unwrapResult } from '@reduxjs/toolkit';
 import { useTranslation } from 'react-i18next';
 import { useSnackbar } from 'notistack';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogActions from '@material-ui/core/DialogActions';
 import Button from '@material-ui/core/Button';
+import { useAppDispatch } from '../../store';
 import { getTranslation } from '../../../share/translationContainer';
-import { selectors, actions } from '../reducer';
+import {
+    selectors as newsSelectors,
+    actions as newsActions,
+} from '../../news/reducer';
 
 export interface RemoveDialogProps {
     isOpen: boolean;
@@ -20,9 +28,9 @@ function RemoveDialog({
     id,
     onClose,
 }: RemoveDialogProps): ReactElement {
-    const dispatch = useDispatch();
+    const dispatch = useAppDispatch();
     const { t, i18n } = useTranslation(['main', 'common']);
-    const news = useSelector(selectors.news(id));
+    const news = useSelector(newsSelectors.data.news(id));
     const { enqueueSnackbar } = useSnackbar();
 
     const handleDeleteFulfilled = useCallback(
@@ -36,13 +44,15 @@ function RemoveDialog({
     );
 
     const handleApply = useCallback(
-        () => {
-            dispatch(actions.news.deleteNews({
-                id,
-                onFulfilled: handleDeleteFulfilled,
-                onRejected: handleDeleteRejected,
-            }));
-            onClose();
+        async () => {
+            try {
+                unwrapResult(await dispatch(newsActions.data.deleteNews(id)));
+                handleDeleteFulfilled();
+            } catch {
+                handleDeleteRejected();
+            } finally {
+                onClose();
+            }
         },
         [dispatch, handleDeleteFulfilled, handleDeleteRejected, id, onClose],
     );

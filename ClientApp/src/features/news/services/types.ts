@@ -9,3 +9,7 @@ export interface Page {
     };
     previewImage: string;
 }
+
+export interface UpdatePage extends Page {
+    id: number;
+}

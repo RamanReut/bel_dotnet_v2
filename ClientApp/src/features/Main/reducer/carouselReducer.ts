@@ -1,9 +1,26 @@
 /* eslint-disable no-param-reassign */
-import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import {
+    createSlice,
+    PayloadAction,
+    createSelector,
+} from '@reduxjs/toolkit';
 import { ROOT_REDUCER_NAME } from './constants';
 import { CarouselState } from './types';
+import rootSelector from './rootSelector';
 
 const maxSlidesCount = 10;
+
+const carouselStateSelector = createSelector(
+    rootSelector,
+    (main) => main.carousel,
+);
+
+const selectors = {
+    currentSlide: createSelector(
+        carouselStateSelector,
+        (carousel) => carousel.currentSlide,
+    ),
+};
 
 const initialState: CarouselState = {
     currentSlide: 0,
@@ -26,3 +43,4 @@ const carouselSlice = createSlice({
 });
 
 export const { reducer, actions } = carouselSlice;
+export { selectors };

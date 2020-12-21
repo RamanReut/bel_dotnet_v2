@@ -30,10 +30,7 @@
       },
       "rules": {
         "linebreak-style": "off",
-        "indent": [
-          "warn",
-          4
-        ],
+        "indent": "off",
         "react/jsx-indent": [
           "warn",
           4
@@ -56,6 +53,18 @@
             "when": "multiline"
           }
         ],
-        "react/jsx-props-no-spreading": [0]
+        "react/jsx-props-no-spreading": [0],
+        "no-empty": [
+          "error", 
+          {
+            "allowEmptyCatch": true 
+          }
+        ],
+        "no-param-reassign": [
+          "error",
+          {
+            "props": false
+          }
+        ]
       }
 }

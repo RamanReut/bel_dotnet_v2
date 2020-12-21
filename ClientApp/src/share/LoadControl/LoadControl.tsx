@@ -2,7 +2,7 @@ import React, { ReactChild, ReactElement } from 'react';
 import Loading from './Loading';
 import NotLoad from './NotLoad';
 
-interface LoadControlProps {
+export interface LoadControlProps {
     children: ReactChild;
     isLoading?: boolean;
     isLoadSuccess?: boolean;
@@ -11,8 +11,8 @@ interface LoadControlProps {
 
 function LoadControl({
     children,
-    isLoading,
-    isLoadSuccess,
+    isLoading = false,
+    isLoadSuccess = true,
     onRefresh,
 }: LoadControlProps): ReactElement {
     let res: ReactChild;
@@ -31,11 +31,5 @@ function LoadControl({
         </>
     );
 }
-
-LoadControl.defaultProps = {
-    isLoading: false,
-    isLoadSuccess: true,
-    onRefresh: undefined,
-};
 
 export default LoadControl;

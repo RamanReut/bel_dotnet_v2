@@ -46,6 +46,7 @@ function LoadMore({
 export interface HeaderedListProps {
     addLink: string;
     title: string;
+    titleLink?: string;
     elements: HeaderedListElementProps[];
     onLoadMoreRequest?: () => void | undefined;
     isLoading?: boolean;
@@ -53,6 +54,7 @@ export interface HeaderedListProps {
 
 function HeaderedList({
     title,
+    titleLink,
     elements,
     addLink,
     onLoadMoreRequest,
@@ -62,6 +64,7 @@ function HeaderedList({
         <HeaderedSection
             title={title}
             addLink={addLink}
+            titleLink={titleLink}
         >
             <List>
                 {elements.map((elem) => (

@@ -14,6 +14,16 @@ const useStyles = makeStyles((theme) => ({
     title: {
         margin: '0.5em',
     },
+    titleLink: {
+        color: theme.palette.primary.contrastText,
+        textDecoration: 'none',
+        '&:visited': {
+            color: theme.palette.primary.contrastText,
+        },
+        '&:hover': {
+            textDecoration: 'underline',
+        },
+    },
     addIconWrapper: {
         position: 'absolute',
         top: 0,
@@ -34,12 +44,14 @@ const useStyles = makeStyles((theme) => ({
 
 export interface HeaderedSectionProps {
     title: string;
+    titleLink?: string;
     addLink: string;
     children: ReactChild | ReactChild[];
 }
 
 function HeaderedSection({
     title,
+    titleLink,
     children,
     addLink,
 }: HeaderedSectionProps): ReactElement {
@@ -55,7 +67,18 @@ function HeaderedSection({
                     className={classes.title}
                     variant="h5"
                 >
-                    {title}
+                    {
+                        titleLink
+                            ? (
+                                <Link
+                                    className={classes.titleLink}
+                                    to={titleLink}
+                                >
+                                    {title}
+                                </Link>
+                            )
+                            : title
+                    }
                 </Typography>
                 <div className={classes.addIconWrapper}>
                     <IconButton

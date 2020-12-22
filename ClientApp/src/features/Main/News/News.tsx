@@ -69,6 +69,7 @@ function News(): ReactElement {
         <>
             <HeaderedList
                 title={t('main:newsTitle')}
+                titleLink="/news/all"
                 elements={newsListElements}
                 addLink="/editNews/new"
                 isLoading={isLoading}

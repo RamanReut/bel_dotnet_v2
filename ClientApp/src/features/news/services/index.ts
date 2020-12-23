@@ -1,9 +1,10 @@
 import newPageRequest from './newPageRequest';
 import getPage from './getPage';
-import { Page, UpdatePage } from './types';
 import updatePageRequest from './updatePageRequest';
 import getNewsListByDecentOrder from './getNewsListByDecentOrder';
 import deleteNews from './deleteNews';
+import getNewsCount from './getNewsCount';
+import { Page, UpdatePage } from './types';
 
 export {
     newPageRequest,
@@ -11,5 +12,6 @@ export {
     updatePageRequest,
     getNewsListByDecentOrder,
     deleteNews,
+    getNewsCount,
 };
 export type { Page, UpdatePage };

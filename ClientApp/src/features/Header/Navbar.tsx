@@ -12,7 +12,7 @@ export default function Navbar(): React.ReactElement {
     const { t } = useTranslation('pages');
 
     const pages = useMemo(() => (
-        ['main', 'about'] as Array<Page>).map((page) => ({
+        ['main', 'news', 'about'] as Array<Page>).map((page) => ({
             title: t(page),
             href: PAGE_ROUTES[page],
         })), [t]);

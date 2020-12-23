@@ -13,6 +13,7 @@ import {
     newPageRequest,
     Page,
     deleteNews as deleteNewsRequest,
+    getNewsCount as getNewsCountRequest,
 } from '../services';
 import {
     getTranslation,
@@ -134,6 +135,10 @@ const selectors = {
                 (news) => news?.content,
             )
         )
+    ),
+    maxCount: createSelector(
+        dataSelector,
+        (data) => data.maxCount,
     ),
 };
 
@@ -298,6 +303,11 @@ function upsertNewsState(state: DataState, news: News) {
     newsAdapter.upsertOne(state.news, news);
 }
 
+const initNewsCount = createAsyncThunk(
+    `${REDUCER_NAME}/getNewsCount`,
+    getNewsCountRequest,
+);
+
 const slice = createSlice({
     name: REDUCER_NAME,
     initialState,
@@ -376,6 +386,12 @@ const slice = createSlice({
                         ),
                     );
                 },
+            )
+            .addCase(
+                initNewsCount.fulfilled,
+                (state, { payload }: PayloadAction<number>) => {
+                    state.maxCount = payload;
+                },
             );
     },
 });
@@ -387,6 +403,7 @@ export const actions = {
     updateNews,
     addNews,
     deleteNews,
+    initNewsCount,
 };
 export { selectors };
 export const { reducer } = slice;

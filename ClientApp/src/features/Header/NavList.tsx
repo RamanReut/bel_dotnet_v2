@@ -36,6 +36,7 @@ function Item({
             button
             component={NavLink}
             to={href}
+            exact
             activeClassName={classes.active}
             disableRipple
         >

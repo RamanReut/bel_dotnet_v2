@@ -99,5 +99,10 @@ namespace Repositories
                     .First(news => news.Id == id),
             };
         }
+
+        public int Count()
+        {
+            return Db.News.Count();
+        }
     }
 }

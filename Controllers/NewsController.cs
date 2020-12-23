@@ -72,8 +72,18 @@ namespace Controllers
         public JsonResult Delete(int id)
         {
             Logger.LogInformation("Delete news with id {0}", id);
+
             (new NewsRepository(Db)).DeleteEntityFromDatabase(id);
             return new JsonResult(new { id = id });
+        }
+
+        [HttpGet("count")]
+        public JsonResult Count()
+        {
+            Logger.LogInformation("Get news count");
+
+            var count = (new NewsRepository(Db)).Count();
+            return new JsonResult(new { count = count });
         }
     }
 }

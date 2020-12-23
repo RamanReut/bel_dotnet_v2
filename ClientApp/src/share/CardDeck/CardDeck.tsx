@@ -18,20 +18,26 @@ const useStyles = makeStyles({
 });
 
 export interface CardDeckProps{
-    cards?: ReactChild[];
+    children?: ReactChild[];
+    page?: number;
     pageCount?: number;
 }
 
 function CardDeck({
-    cards = [],
+    children = [],
+    page = 0,
     pageCount = 0,
 }: CardDeckProps): ReactElement {
     const classes = useStyles();
 
     return (
         <div className={classes.root}>
-            <Grid container>
-                {cards.map((cur, index) => (
+            <Grid
+                container
+                spacing={3}
+                justify="space-evenly"
+            >
+                {children.map((cur, index) => (
                     <Grid
                         item
                         key={index.toString()}
@@ -45,6 +51,7 @@ function CardDeck({
                     ? (
                         <Pagination
                             classes={{ ul: classes.ul }}
+                            page={page}
                             count={pageCount}
                         />
                     )

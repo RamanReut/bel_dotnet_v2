@@ -9,6 +9,7 @@ export interface NewsState {
     edit: EditState;
     data: DataState;
     common: CommonState;
+    list: ListState;
 }
 
 export interface DataState {
@@ -42,4 +43,8 @@ export interface News {
 
 export interface CommonState {
     isPreview: boolean;
+}
+
+export interface ListState {
+    page: number;
 }

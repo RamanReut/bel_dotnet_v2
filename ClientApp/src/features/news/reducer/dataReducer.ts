@@ -256,7 +256,7 @@ const initFullNews = createAsyncThunk(
     async (id: number, { getState }) => {
         let news = selectors.news(id)(getState() as RootState);
 
-        if (!news) {
+        if (!(news?.type === 'full')) {
             news = await getPage(id);
         }
 

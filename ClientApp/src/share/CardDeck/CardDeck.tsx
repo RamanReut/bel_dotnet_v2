@@ -2,6 +2,7 @@ import React, { ReactElement, ReactChild } from 'react';
 import Pagination from '@material-ui/lab/Pagination';
 import Grid from '@material-ui/core/Grid';
 import { makeStyles } from '@material-ui/core/styles';
+import classnames from 'classnames';
 
 const useStyles = makeStyles({
     root: {
@@ -21,17 +22,19 @@ export interface CardDeckProps{
     children?: ReactChild[];
     page?: number;
     pageCount?: number;
+    className?: string;
 }
 
 function CardDeck({
     children = [],
     page = 0,
     pageCount = 0,
+    className,
 }: CardDeckProps): ReactElement {
     const classes = useStyles();
 
     return (
-        <div className={classes.root}>
+        <div className={classnames(classes.root, className)}>
             <Grid
                 container
                 spacing={3}

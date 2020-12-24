@@ -51,7 +51,6 @@ function Slide({
             to={link}
         >
             <Image
-                responsive
                 aspectRatio={ASPECT_RATIO}
                 width="auto"
                 crop="fill"

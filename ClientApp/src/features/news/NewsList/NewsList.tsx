@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@material-ui/core';
 import { useAppDispatch } from '../../store';
-import Section from '../../../share/Section';
+import HeaderedSection from '../../../share/HeaderedSection';
 import CardDeck from '../../../share/CardDeck';
 import { getTranslation } from '../../../share/translationContainer';
 import NewsCard from './NewsCard';
@@ -19,8 +19,9 @@ const NEWS_PER_PAGE = 9;
 
 const useStyles = makeStyles(
     (theme) => ({
-        root: {
-            backgroundColor: theme.palette.grey[100],
+        cardDeck: {
+            backgroundColor: theme.palette.grey[200],
+            marginTop: '1em',
         },
     }),
 );
@@ -54,10 +55,12 @@ function NewsList(): ReactElement {
     );
 
     return (
-        <Section
-            className={classes.root}
+        <HeaderedSection
+            title="Новости"
+            addLink="/editNews/new"
         >
             <CardDeck
+                className={classes.cardDeck}
                 page={page}
                 pageCount={Math.ceil(newsCount / NEWS_PER_PAGE)}
             >
@@ -74,7 +77,7 @@ function NewsList(): ReactElement {
                     );
                 })}
             </CardDeck>
-        </Section>
+        </HeaderedSection>
     );
 }
 

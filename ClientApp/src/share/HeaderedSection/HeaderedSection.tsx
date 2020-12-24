@@ -5,6 +5,7 @@ import IconButton from '@material-ui/core/IconButton';
 import { makeStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import { Link } from 'react-router-dom';
+import classnames from 'classnames';
 import Section from '../Section';
 
 const useStyles = makeStyles((theme) => ({
@@ -42,11 +43,20 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
+export interface HeaderedSectionClasses {
+    root?: string;
+    title?: string;
+    button?: string;
+    header?: string;
+    titleLink?: string;
+}
+
 export interface HeaderedSectionProps {
     title: string;
     titleLink?: string;
-    addLink: string;
+    addLink?: string;
     children: ReactChild | ReactChild[];
+    classes?: HeaderedSectionClasses;
 }
 
 function HeaderedSection({
@@ -54,24 +64,30 @@ function HeaderedSection({
     titleLink,
     children,
     addLink,
+    classes: inputClasses = {},
 }: HeaderedSectionProps): ReactElement {
     const classes = useStyles();
 
     return (
-        <Section>
+        <Section className={classnames(inputClasses.root)}>
             <AppBar
-                className={classes.header}
+                className={classnames(classes.header, inputClasses.header)}
                 position="static"
             >
                 <Typography
-                    className={classes.title}
+                    className={classnames(classes.title, inputClasses.title)}
                     variant="h5"
                 >
                     {
                         titleLink
                             ? (
                                 <Link
-                                    className={classes.titleLink}
+                                    className={
+                                        classnames(
+                                            classes.titleLink,
+                                            inputClasses.titleLink,
+                                        )
+                                    }
                                     to={titleLink}
                                 >
                                     {title}
@@ -80,15 +96,28 @@ function HeaderedSection({
                             : title
                     }
                 </Typography>
-                <div className={classes.addIconWrapper}>
-                    <IconButton
-                        className={classes.addIcon}
-                        component={Link}
-                        to={addLink}
-                    >
-                        <AddIcon />
-                    </IconButton>
-                </div>
+                {
+                    addLink
+                        ? (
+                            <div
+                                className={
+                                    classnames(
+                                        classes.addIconWrapper,
+                                        inputClasses.button,
+                                    )
+                                }
+                            >
+                                <IconButton
+                                    className={classes.addIcon}
+                                    component={Link}
+                                    to={addLink}
+                                >
+                                    <AddIcon />
+                                </IconButton>
+                            </div>
+                        )
+                        : <div />
+                }
             </AppBar>
             {children}
         </Section>
